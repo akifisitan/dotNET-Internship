@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SummerSchool.DataAccess.MsSql.DbContext;
 
@@ -11,9 +12,11 @@ using SummerSchool.DataAccess.MsSql.DbContext;
 namespace SummerSchool.DataAccess.MsSql.Migrations
 {
     [DbContext(typeof(SummerSchoolDbContext))]
-    partial class SummerSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230726222634_updateBook")]
+    partial class updateBook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

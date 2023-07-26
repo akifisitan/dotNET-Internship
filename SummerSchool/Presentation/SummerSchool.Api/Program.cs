@@ -11,6 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped(typeof(BookHandler));
 builder.Services.AddScoped<IBookRepository, BookRepository>();
+builder.Services.AddScoped(typeof(GenreHandler));
+builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddDbContext<SummerSchoolDbContext>(options =>
     options.UseSqlServer("Data Source=localhost;Initial Catalog=SummerSchool;User id=sa;Password=myDBpas12.WORD;TrustServerCertificate=True"));
 
@@ -23,9 +25,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-app.UseTraceMiddleware();
-app.UsePerformanceMiddleware();
-app.UseExceptionHandlerMiddleware();
+//app.UseTraceMiddleware();
+//app.UsePerformanceMiddleware();
+//app.UseExceptionHandlerMiddleware();
 // app.UseLoggingMiddleware();
 
 // Configure the HTTP request pipeline.

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SummerSchool.DataAccess.MsSql.DbContext;
 
@@ -11,9 +12,11 @@ using SummerSchool.DataAccess.MsSql.DbContext;
 namespace SummerSchool.DataAccess.MsSql.Migrations
 {
     [DbContext(typeof(SummerSchoolDbContext))]
-    partial class SummerSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230726220055_genreRelationAdded")]
+    partial class genreRelationAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,17 +33,10 @@ namespace SummerSchool.DataAccess.MsSql.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("PublishDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Publisher")
+                    b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -51,32 +47,13 @@ namespace SummerSchool.DataAccess.MsSql.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
-
-                    b.ToTable("Books");
-                });
-
-            modelBuilder.Entity("SummerSchool.Entity.Entity.Genre", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("UpdatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Books");
                 });
 #pragma warning restore 612, 618
         }

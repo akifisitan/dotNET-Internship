@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SummerSchool.DataAccess.MsSql.DbContext;
 
@@ -11,9 +12,11 @@ using SummerSchool.DataAccess.MsSql.DbContext;
 namespace SummerSchool.DataAccess.MsSql.Migrations
 {
     [DbContext(typeof(SummerSchoolDbContext))]
-    partial class SummerSchoolDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230726222053_addedGenreName")]
+    partial class addedGenreName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,19 +33,8 @@ namespace SummerSchool.DataAccess.MsSql.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Author")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("PublishDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Publisher")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Title")
                         .IsRequired()
