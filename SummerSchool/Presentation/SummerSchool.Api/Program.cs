@@ -12,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped(typeof(BookHandler));
 builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddDbContext<SummerSchoolDbContext>(options =>
-    options.UseSqlServer("Data Source=localhost;Initial Catalog=SummerSchool;User id=sa;Password=1234qqqQ;TrustServerCertificate=True"));
+    options.UseSqlServer("Data Source=localhost;Initial Catalog=SummerSchool;User id=sa;Password=myDBpas12.WORD;TrustServerCertificate=True"));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -26,7 +26,7 @@ var app = builder.Build();
 app.UseTraceMiddleware();
 app.UsePerformanceMiddleware();
 app.UseExceptionHandlerMiddleware();
-app.UseLoggingMiddleware();
+// app.UseLoggingMiddleware();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
