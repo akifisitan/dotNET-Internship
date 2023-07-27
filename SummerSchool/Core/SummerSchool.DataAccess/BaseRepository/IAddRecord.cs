@@ -9,6 +9,6 @@ namespace SummerSchool.DataAccess.BaseRepository
 {
     public interface IAddRecord<T> where T : BaseEntity
     {
-        T Add(T item);
+        Task<T> AddAsync(T item);
     }
 }

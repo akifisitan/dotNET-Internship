@@ -12,8 +12,8 @@ using SummerSchool.DataAccess.MsSql.DbContext;
 namespace SummerSchool.DataAccess.MsSql.Migrations
 {
     [DbContext(typeof(SummerSchoolDbContext))]
-    [Migration("20230726220055_genreRelationAdded")]
-    partial class genreRelationAdded
+    [Migration("20230727083145_publish-date-added")]
+    partial class publishdateadded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -36,9 +36,8 @@ namespace SummerSchool.DataAccess.MsSql.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("PublishDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -46,10 +45,6 @@ namespace SummerSchool.DataAccess.MsSql.Migrations
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("UpdatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

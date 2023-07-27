@@ -19,8 +19,11 @@ namespace SummerSchool.Api.Middlewares
         {
             if (!httpContext.Request.Headers.ContainsKey(CORR_ID))
             {
-                httpContext.Request.Headers.Add(CORR_ID, Guid.NewGuid().ToString());
+                var corrId = Guid.NewGuid().ToString();
+                httpContext.Request.Headers.Add(CORR_ID, corrId);
+                _logger.LogInformation("-------------- New Request Received -------------- CORRID = {corrId}", corrId);
             }
+            
             _logger.LogInformation("Request with CorrId {corrId} started at {datetime}", httpContext.Request.Headers[TraceMiddleware.CORR_ID], DateTime.Now);
             await _next(httpContext);
         }

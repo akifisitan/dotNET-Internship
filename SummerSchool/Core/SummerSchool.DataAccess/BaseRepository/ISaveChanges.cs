@@ -8,6 +8,6 @@ namespace SummerSchool.DataAccess.BaseRepository
 {
     internal interface ISaveChanges
     {
-        int SaveChanges();
+        Task<int> SaveChangesAsync();
     }
 }

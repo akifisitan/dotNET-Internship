@@ -9,6 +9,6 @@ namespace SummerSchool.DataAccess.BaseRepository
 {
     public interface IGetRecord<T> where T : BaseEntity
     {
-        T? GetById(int id);
+        Task<T?> GetByIdAsync(int id);
     }
 }

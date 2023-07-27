@@ -13,68 +13,67 @@ namespace SummerSchool.App.Handler
         }
 
 
-        public List<Book> GetBooks() 
+        public async Task<List<Book>> GetBooksAsync() 
         {
-            Thread.Sleep(1242);
-            return _bookRepository.GetAll(); 
+            return await _bookRepository.GetAllAsync();
         }
 
-        public Book? GetBook(int id) 
+        public async Task<Book?> GetBookAsync(int id) 
         {
-            return _bookRepository.GetById(id);
+            return await _bookRepository.GetByIdAsync(id);
         }
 
-        public bool AddBook(Book book)
+        public async Task<Book> AddBookAsync(Book book)
         {
             if (IsValid(book))
             {
-                var existingBook = _bookRepository.GetByTitle(book.Title);
+                var existingBook = await _bookRepository.GetByTitleAsync(book.Title);
 
                 if (existingBook == null)
                 {
-                    _bookRepository.Add(book);
-                    return true;
+                    var newBook = await _bookRepository.AddAsync(book);
+                    return newBook;
                 }
                 else
                 {
-                    return false;
+                    return null;
                 }
             }
             else
             {
-                return false;
+                return null;
             }
         }
 
-        public bool UpdateBook(Book book)
+        public async Task<Book> UpdateBookAsync(Book book)
         {
             if (IsValid(book))
             {
-                var existingBook = _bookRepository.GetById(book.Id);
+                var existingBook = await _bookRepository.GetByIdAsync(book.Id);
 
                 if (existingBook != null)
                 {
-                    _bookRepository.Update(book);
-                    return true;
+                    var editBook = await _bookRepository.UpdateAsync(existingBook.UpdateBook(book));
+                    return editBook;
                 }
                 else
                 {
-                    return false;
+                    return null;
                 }
             }
             else
             {
-                return false;
+                return null;
             }
         }
 
-        public bool DeleteBook(int id) 
+        public async Task<bool> DeleteBookAsync(int id) 
         {
-            var existingBook = _bookRepository.GetById(id);
+            var existingBook = await _bookRepository.GetByIdAsync(id);
 
             if (existingBook != null)
             {
-                _bookRepository.Delete(id);
+                await _bookRepository.DeleteAsync(id);
                 return true;
             }
             else

@@ -13,39 +13,51 @@ namespace SummerSchool.DataAccess.MsSql.Repository
         public GenericRepository(SummerSchoolDbContext context)
         {
             _context = context;
+            //_context.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             _set = _context.Set<T>();
         }
 
-        public List<T> GetAll()
+        public async Task<List<T>> GetAllAsync()
         {
-            return _set.ToList();
+            return await _set.AsNoTracking().ToListAsync();
         }
 
-        public T? GetById(int id)
+        public async Task<T?> GetByIdAsync(int id)
         {
-            return _set.SingleOrDefault(x => x.Id == id);
+            var entity = await _set.SingleOrDefaultAsync(x => x.Id == id);
+            //if(entity != null) 
+            //{ 
+            //    _context.Entry(entity).State = EntityState.Detached;
+            //}
+            return entity;
         }
 
-        public T Add(T item)
+        public async Task<T> AddAsync(T item)
         {
-            _set.Add(item);
-            _context.SaveChanges();
+            item.CreatedAt = DateTime.Now;
+
+            _context.Entry(item).State = EntityState.Added;
+            //_set.Add(item);
+            await _context.SaveChangesAsync();
             return item;
         }
-        public T Update(T item)
+        public async Task<T> UpdateAsync(T item)
         {
-            _set.Update(item);
-            _context.SaveChanges();
+            item.UpdatedAt = DateTime.Now;
+
+            _context.Entry(item).State = EntityState.Modified;
+            //_set.Update(item);
+            await _context.SaveChangesAsync();
             return item;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var entity = GetById(id);
+            var entity = await GetByIdAsync(id);
             if (entity != null)
             {
                 _set.Remove(entity);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return true;
             }
 

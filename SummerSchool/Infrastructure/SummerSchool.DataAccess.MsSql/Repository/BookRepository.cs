@@ -2,6 +2,7 @@
 using SummerSchool.DataAccess.Repository;
 using SummerSchool.Entity.Entity;
 using SummerSchool.DataAccess.MsSql.DbContext;
+using Microsoft.EntityFrameworkCore;
 
 namespace SummerSchool.DataAccess.MsSql.Repository
 {
@@ -12,9 +13,14 @@ namespace SummerSchool.DataAccess.MsSql.Repository
             
         }
 
-        public Book? GetByTitle(string title)
+        public async Task<Book?> GetByTitleAsync(string title)
         {
-            return _set.FirstOrDefault(x=>x.Title == title);
+            var book = await _set.FirstOrDefaultAsync(x => x.Title == title);
+            if(book != null)
+            { 
+                _context.Entry(book).State = EntityState.Detached;
+            }
+            return book;
         }
     }
 }

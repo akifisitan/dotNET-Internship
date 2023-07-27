@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SummerSchool.Api.DTO;
 using SummerSchool.App.Handler;
 using SummerSchool.Entity.Entity;
 
@@ -18,48 +19,56 @@ namespace SummerSchool.Api.Controllers
 
         [HttpGet]
         [Route("list")]
-        public IActionResult Get()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_handler.GetBooks());
+            var bookList = new List<BookInfoDTO>();
+            var result = await _handler.GetBooksAsync();
+            result.ForEach(book => bookList.Add(new BookInfoDTO(book)));
+
+            return Ok(bookList);
         }
 
         [HttpGet]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return Ok(_handler.GetBook(id));
+            var book = await _handler.GetBookAsync(id);
+            if (book == null)
+                return NotFound();
+
+            return Ok(new BookDetailDTO(book));
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Book request)
+        public async Task<IActionResult> Post([FromBody] NewBookDTO request)
         {
-            var result = _handler.AddBook(request);
+            var newBook = await _handler.AddBookAsync(request.ToBook());
 
-            if (!result)
-                return NotFound();
+            if (newBook == null)
+                return NotFound(); // handle this
             else
-                return Ok();
+                return Ok(new BookDetailDTO(newBook));
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Book request)
+        public async Task<IActionResult> Put([FromBody] EditBookDTO request)
         {
-            var result = _handler.UpdateBook(request);
+            var editBook = await _handler.UpdateBookAsync(request.ToBook());
 
-            if (!result)
-                return NotFound();
+            if (editBook == null)
+                return NotFound();      // handle this
             else
-                return Ok();
+                return Ok(new BookDetailDTO(editBook));
         }
 
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var result = _handler.DeleteBook(id);
+            var result = await _handler.DeleteBookAsync(id);
 
             if (!result)
                 return NotFound();
             else
-                return Ok();
+                return NoContent();
         }
     }
 }
