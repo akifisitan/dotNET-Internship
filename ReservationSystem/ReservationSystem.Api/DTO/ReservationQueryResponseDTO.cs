@@ -15,6 +15,7 @@
             ReservationId = reservationId;
         }
 
+        // Sort by reservation date, then by timeslot 
         public int CompareTo(ReservationQueryResponseDTO? other)
         {
             if (other == null)

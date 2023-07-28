@@ -1,5 +1,6 @@
 using AdressBook.Api.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
+using ReservationSystem.Api.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+// Database Context Info
 builder.Services.AddDbContext<FieldReservationContext>(options =>
     options.UseSqlServer("Data Source=localhost;Initial Catalog=FieldReservation;User id=sa;Password=myDBpas12.WORD;TrustServerCertificate=True"));
 
@@ -15,6 +17,10 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Activate Middleware
+app.UseTraceMiddleware();
+app.UseExceptionHandlerMiddleware();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

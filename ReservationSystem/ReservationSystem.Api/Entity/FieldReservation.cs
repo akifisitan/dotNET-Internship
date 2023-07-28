@@ -1,6 +1,6 @@
 ﻿namespace ReservationSystem.Api.Entity
 {
-    public class FieldReservation : BaseEntity, IComparable<FieldReservation>
+    public class FieldReservation : BaseEntity
     {
         public DateTime Date { get; set; }
         public int StartHour { get; set; }
@@ -25,21 +25,5 @@
             return !(compareStartHour >= EndHour || compareEndHour <= StartHour);
         }
 
-        public int CompareTo(FieldReservation? other)
-        {
-            if (other == null)
-                return 0;
-            int dateComparison = Date.CompareTo(other.Date);
-            if (dateComparison == 0)
-            {
-                return StartHour.CompareTo(other.StartHour);
-            }
-            return dateComparison;
-        }
-
-        public override string ToString()
-        {
-            return $"Reservation for: {ReserverName} between {StartHour}-{EndHour} at {Date.Date.ToShortDateString()}.";
-        }
     }
 }

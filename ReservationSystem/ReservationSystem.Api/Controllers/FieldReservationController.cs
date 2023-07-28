@@ -14,23 +14,30 @@ namespace ReservationSystem.Api.Controllers
 
         protected readonly FieldReservationContext _context;
         protected readonly DbSet<FieldReservation> _set;
+        private readonly ILogger<FieldReservationController> _logger;
 
-        public FieldReservationController(FieldReservationContext context)
+        public FieldReservationController(FieldReservationContext context, ILogger<FieldReservationController> logger)
         {
             _context = context;
             _set = context.Set<FieldReservation>();
+            _logger = logger;
         }
 
         [HttpGet]
         [Route("getAll")]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            return Ok(_set.ToList());
+            var response = new GenericResponse<List<FieldReservation>>
+            {
+                Message = "Successfully fetched data.",
+                Data = await _set.AsNoTracking().ToListAsync()
+            };
+            return Ok(response);
         }
 
         [HttpGet]
         [Route("queryByRange")]
-        public IActionResult GetByRange(string startDate, string endDate)
+        public async Task<IActionResult> GetByRange(string startDate, string endDate)
         {
             var response = new GenericResponse<List<ReservationQueryResponseDTO>>();
             if (!DateTime.TryParseExact(startDate, "dd/MM/yyyy",
@@ -49,7 +56,8 @@ namespace ReservationSystem.Api.Controllers
                 return BadRequest(response);
             }
             var queryResult = new List<ReservationQueryResponseDTO>();
-            foreach (var reservation in _set.ToList())
+            var reservations = await _set.AsNoTracking().ToListAsync();
+            foreach (var reservation in reservations)
             {
                 if (parsedStartDate <= reservation.Date && reservation.Date <= parsedEndDate)
                 {
@@ -69,7 +77,7 @@ namespace ReservationSystem.Api.Controllers
 
         [HttpPost]
         [Route("add")]
-        public IActionResult Add([FromBody] ReservationCreateRequestDTO request)
+        public async Task<IActionResult> Add([FromBody] ReservationCreateRequestDTO request)
         {
             var response = new GenericResponse<FieldReservation>();
             if (request.Duration > 4 || request.Duration < 1 ||
@@ -110,8 +118,8 @@ namespace ReservationSystem.Api.Controllers
                 EndHour = request.StartHour + request.Duration,
                 ReserverName = request.ReserverName
             };
-            _set.Add(reservation);
-            _context.SaveChanges();
+            _context.Entry(reservation).State = EntityState.Added;
+            await _context.SaveChangesAsync();
             response.Message = "Reservation Successful.";
             response.Data = reservation;
             return Ok(response);
@@ -119,7 +127,7 @@ namespace ReservationSystem.Api.Controllers
 
         [HttpDelete]
         [Route("delete")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var existingEntity = _set.SingleOrDefault(x => x.Id == id);
             if (existingEntity == null)
@@ -127,7 +135,7 @@ namespace ReservationSystem.Api.Controllers
                 return NotFound();
             }
             _set.Remove(existingEntity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok(existingEntity);
         }
     }
