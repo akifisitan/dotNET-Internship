@@ -1,11 +1,11 @@
 # Rider
-# *.idea/
-# *.vscode/
+*.idea/
+*.vscode/
 
 # Visual Studio files
-# *.suo
-# *.user
-# *.sln.docstates
+*.suo
+*.user
+*.sln.docstates
 *.vs/
 
 # Build results
@@ -18,19 +18,19 @@ x86/
 [Oo]ut/
 
 # NuGet packages
-# */packages/
-# *.nupkg
-# **/packages/*
-# *.nuget.props
-# *.nuget.targets
+*/packages/
+*.nupkg
+**/packages/*
+*.nuget.props
+*.nuget.targets
 
 # Other files
-# *.log
-# *.bak
-# *.Cache
-# *.csproj.user
-# *.resharper
-# *.resharper.user
-# *.suo
-# *.userprefs
-# *.vspscc
+*.log
+*.bak
+*.Cache
+*.csproj.user
+*.resharper
+*.resharper.user
+*.suo
+*.userprefs
+*.vspscc
