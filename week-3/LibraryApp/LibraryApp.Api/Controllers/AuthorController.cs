@@ -1,7 +1,6 @@
 ﻿using LibraryApp.Api.Auth;
 using LibraryApp.Api.DatabaseContext;
 using LibraryApp.Api.DTO.AuthorDto;
-using LibraryApp.Api.Entity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -41,7 +40,7 @@ namespace LibraryApp.Api.Controllers
         {
             var result = await _libraryContext.Authors.Include(author => author.Books).SingleOrDefaultAsync(x => x.Id == id);
 
-            if(result != null)
+            if (result != null)
                 return Ok(new AuthorInfoDto(result));
 
             return NotFound();
