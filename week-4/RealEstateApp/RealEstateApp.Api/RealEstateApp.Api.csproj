@@ -22,7 +22,6 @@
     <Folder Include="DTO\PropertyImageDTO\" />
     <Folder Include="DTO\UserDTO\" />
     <Folder Include="DTO\PropertyDTO\" />
-    <Folder Include="Enums\" />
   </ItemGroup>
 
 </Project>
