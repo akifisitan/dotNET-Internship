@@ -1,6 +1,6 @@
-﻿namespace RealEstateApp.Api.DTO.AuthDto
+﻿namespace RealEstateApp.Api.DTO.AuthDTO
 {
-    public class LoginRequestDto
+    public class LoginRequestDTO
     {
         public string? Username { get; set; }
 

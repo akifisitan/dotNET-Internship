@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RealEstateApp.Api.Auth;
 using RealEstateApp.Api.DatabaseContext;
-using RealEstateApp.Api.DTO.AuthDto;
+using RealEstateApp.Api.DTO.AuthDTO;
 using RealEstateApp.Api.Entity;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -36,7 +36,7 @@ namespace RealEstateApp.Api.Controllers
         }
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequestDto request)
+        public async Task<IActionResult> Login([FromBody] LoginRequestDTO request)
         {
             var user = await _userManager.FindByNameAsync(request.Username);
             if (user != null && await _userManager.CheckPasswordAsync(user, request.Password))
@@ -70,11 +70,11 @@ namespace RealEstateApp.Api.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequestDto model)
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDTO model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User already exists!" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User already exists!" });
 
             IdentityUser user = new()
             {
@@ -84,7 +84,7 @@ namespace RealEstateApp.Api.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
@@ -96,16 +96,16 @@ namespace RealEstateApp.Api.Controllers
             _realEstateContext.Users.Add(newUser);
             await _realEstateContext.SaveChangesAsync();
 
-            return Ok(new ResponseDto { Status = "Success", Message = "User created successfully!" });
+            return Ok(new ResponseDTO { Status = "Success", Message = "User created successfully!" });
         }
 
         [HttpPost]
         [Route("register-admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterRequestDto model)
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterRequestDTO model)
         {
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User already exists!" });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User already exists!" });
 
             IdentityUser user = new()
             {
@@ -115,7 +115,7 @@ namespace RealEstateApp.Api.Controllers
             };
             var result = await _userManager.CreateAsync(user, model.Password);
             if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDto { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             if (!await _roleManager.RoleExistsAsync(UserRoles.Admin))
                 await _roleManager.CreateAsync(new IdentityRole(UserRoles.Admin));
@@ -138,7 +138,7 @@ namespace RealEstateApp.Api.Controllers
             _realEstateContext.Users.Add(newUser);
             await _realEstateContext.SaveChangesAsync();
 
-            return Ok(new ResponseDto { Status = "Success", Message = "User created successfully!" });
+            return Ok(new ResponseDTO { Status = "Success", Message = "User created successfully!" });
         }
 
         private JwtSecurityToken GetToken(List<Claim> authClaims)

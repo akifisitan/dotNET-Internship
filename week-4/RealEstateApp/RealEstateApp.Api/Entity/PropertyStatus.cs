@@ -1,7 +1,11 @@
 ﻿namespace RealEstateApp.Api.Entity
 {
-    public class PropertyStatus : BaseEntity
+    public class PropertyStatus : PropertyFieldBase
     {
-        public string Value { get; set; }
+        public PropertyStatus() { }
+        public PropertyStatus(string status)
+        {
+            base.Value = status;
+        }
     }
 }

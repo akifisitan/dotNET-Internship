@@ -12,15 +12,15 @@ namespace RealEstateApp.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PropertyStatusController : ControllerBase
+    public class PropertyTypeController : ControllerBase
     {
         private readonly RealEstateContext _context;
-        private readonly DbSet<PropertyStatus> _set;
+        private readonly DbSet<PropertyType> _set;
 
-        public PropertyStatusController(RealEstateContext context)
+        public PropertyTypeController(RealEstateContext context)
         {
             _context = context;
-            _set = _context.PropertyStatuses;
+            _set = _context.PropertyTypes;
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -35,10 +35,10 @@ namespace RealEstateApp.Api.Controllers
             if (result == null)
                 return NotFound();
 
-            var statusInfoList = new List<PropertyFieldInfoDTO<PropertyStatus>>();
-            result.ForEach(status => statusInfoList.Add(new PropertyFieldInfoDTO<PropertyStatus>(status)));
+            var typeInfoList = new List<PropertyFieldInfoDTO<PropertyType>>();
+            result.ForEach(type => typeInfoList.Add(new PropertyFieldInfoDTO<PropertyType>(type)));
 
-            return Ok(statusInfoList);
+            return Ok(typeInfoList);
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -49,10 +49,10 @@ namespace RealEstateApp.Api.Controllers
             {
                 return BadRequest();
             }
-            var item = _set.Add(new PropertyStatus(request.Value));
+            var item = _set.Add(new PropertyType(request.Value));
             await _context.SaveChangesAsync();
 
-            return Ok(new PropertyFieldInfoDTO<PropertyStatus>(item.Entity));
+            return Ok(new PropertyFieldInfoDTO<PropertyType>(item.Entity));
         }
 
         [Authorize(Roles = UserRoles.Admin)]
@@ -69,7 +69,7 @@ namespace RealEstateApp.Api.Controllers
             {
                 item.Value = request.Value;
                 await _context.SaveChangesAsync();
-                return Ok(new PropertyFieldInfoDTO<PropertyStatus>(item));
+                return Ok(new PropertyFieldInfoDTO<PropertyType>(item));
             }
             return NotFound();
         }

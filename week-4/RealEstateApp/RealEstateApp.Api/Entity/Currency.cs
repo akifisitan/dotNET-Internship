@@ -1,7 +1,11 @@
 ﻿namespace RealEstateApp.Api.Entity
 {
-    public class Currency : BaseEntity
+    public class Currency : PropertyFieldBase
     {
-        public string Value { get; set; }
+        public Currency() { }
+        public Currency(string currency)
+        {
+            base.Value = currency;
+        }
     }
 }

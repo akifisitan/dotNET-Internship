@@ -1,6 +1,6 @@
-﻿namespace RealEstateApp.Api.DTO.BaseDto
+﻿namespace RealEstateApp.Api.DTO.BaseDTO
 {
-    public class BaseDto
+    public class BaseDTO
     {
         public int Id { get; set; }
     }
