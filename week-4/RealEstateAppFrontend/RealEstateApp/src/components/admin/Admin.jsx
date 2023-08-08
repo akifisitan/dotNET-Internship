@@ -1,15 +1,18 @@
 import { useState } from "react";
-import Status from "./status/Status";
+import Entity from "./Entity";
 
 const Admin = () => {
   const [category, setCategory] = useState("status");
+  const statusData = { name: "Property Status", path: "PropertyStatus" };
+  const typeData = { name: "Property Type", path: "PropertyType" };
+  const currencyData = { name: "Currency", path: "Currency" };
 
   return (
     <div className="p-2">
       <div>
         <h1>Admin Panel</h1>
         <label className="block mb-2 text-sm font-medium text-white">
-          Select category
+          Select entity
         </label>
         <select
           className="bg-gray-800 pl-2 py-1 mb-2 text-sm font-medium rounded-lg"
@@ -17,18 +20,18 @@ const Admin = () => {
             setCategory(e.target.value);
           }}
         >
-          <option value="status">Status</option>
           <option value="currency">Currency</option>
-          <option value="type">Type</option>
+          <option value="status">Property Status</option>
+          <option value="type">Property Type</option>
         </select>
       </div>
       <div>
         {category === "status" ? (
-          <Status />
+          <Entity entityData={statusData} />
         ) : category === "currency" ? (
-          <h1>Location</h1>
+          <Entity entityData={currencyData} />
         ) : category === "type" ? (
-          <h1>Type</h1>
+          <Entity entityData={typeData} />
         ) : (
           <div>Error</div>
         )}

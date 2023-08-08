@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
-import { getAll } from "../../../services/GenericService";
+import { useState, useEffect } from "react";
+import { getAll } from "../../services/GenericService";
 import { useNavigate } from "react-router-dom";
 
-const ListStatuses = () => {
+const ListEntities = ({ entityData }) => {
   const [{ isLoading, data, error }, setState] = useState({
     isLoading: false,
     data: [],
     error: null,
   });
+  const { name, path } = entityData;
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    const response = await getAll("PropertyStatus");
+    const response = await getAll(path);
     let data = [];
     let error = null;
     if (!response) {
@@ -25,7 +26,6 @@ const ListStatuses = () => {
           break;
         case 401:
           navigate("/logout");
-          error = "You are not authorized to perform this action.";
           break;
         case 403:
           error = "You do not have permission perform to this action.";
@@ -54,23 +54,24 @@ const ListStatuses = () => {
     return () => {
       clearTimeout(timeoutId);
     };
-  }, []);
+  }, [name]);
 
   return (
     <section className="flex flex-col">
+      <h1>{name} List</h1>
       <div className="p-2">
         {!isLoading ? (
           error ? (
             <p>{error}</p>
           ) : (
-            data.map((status) => {
+            data.map((entity) => {
               return (
                 <div
-                  key={status.id}
+                  key={entity.id}
                   className="border-2 rounded-lg p-2 border-cyan-700 pl-2 m-2"
                 >
-                  <p>Id: {status.id}</p>
-                  <p>Value: {status.value}</p>
+                  <p>Id: {entity.id}</p>
+                  <p>Value: {entity.value}</p>
                 </div>
               );
             })
@@ -83,4 +84,4 @@ const ListStatuses = () => {
   );
 };
 
-export default ListStatuses;
+export default ListEntities;

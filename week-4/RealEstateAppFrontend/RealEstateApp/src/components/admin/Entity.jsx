@@ -1,10 +1,10 @@
 import { useState } from "react";
-import ListStatuses from "./ListStatuses";
-import CreateStatus from "./CreateStatus";
-import UpdateStatus from "./UpdateStatus";
-import DeleteStatus from "./DeleteStatus";
+import ListEntities from "./ListEntities";
+import CreateEntity from "./CreateEntity";
+import UpdateEntity from "./UpdateEntity";
+import DeleteEntity from "./DeleteEntity";
 
-const Status = () => {
+const Entity = ({ entityData }) => {
   const [operation, setOperation] = useState("list");
 
   return (
@@ -30,13 +30,13 @@ const Status = () => {
         </div>
         <div className="basis-3/4">
           {operation === "list" ? (
-            <ListStatuses />
+            <ListEntities entityData={entityData} />
           ) : operation === "create" ? (
-            <CreateStatus />
+            <CreateEntity entityData={entityData} />
           ) : operation === "update" ? (
-            <UpdateStatus />
+            <UpdateEntity entityData={entityData} />
           ) : operation === "delete" ? (
-            <DeleteStatus />
+            <DeleteEntity entityData={entityData} />
           ) : null}
         </div>
       </div>
@@ -44,4 +44,4 @@ const Status = () => {
   );
 };
 
-export default Status;
+export default Entity;
