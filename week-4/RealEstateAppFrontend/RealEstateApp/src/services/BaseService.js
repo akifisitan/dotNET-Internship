@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getAccessToken } from "../helpers/Auth";
 
-const baseURL = "http://localhost:5148/";
+export const baseURL = "http://localhost:5148/";
 
 function setConfig(requiresAuth, queryParams) {
   const config = {};

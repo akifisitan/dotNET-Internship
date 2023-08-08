@@ -3,13 +3,13 @@ import { getAll } from "../services/EntityService";
 import { createNewProperty } from "../services/PropertyService";
 
 const CreateProperty = () => {
-  const [startDate, setStartDate] = useState();
-  const [endDate, setEndDate] = useState();
-  const [propertyTypeId, setPropertyTypeId] = useState();
-  const [propertyStatusId, setPropertyStatusId] = useState();
-  const [currencyId, setCurrencyId] = useState();
-  const [price, setPrice] = useState();
-  const [photos, setPhotos] = useState();
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [propertyTypeId, setPropertyTypeId] = useState(-1);
+  const [propertyStatusId, setPropertyStatusId] = useState(-1);
+  const [currencyId, setCurrencyId] = useState(-1);
+  const [price, setPrice] = useState(-1);
+  const [photos, setPhotos] = useState([]);
   const [info, setInfo] = useState(null);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [propertyStatuses, setPropertyStatuses] = useState([]);
@@ -17,36 +17,39 @@ const CreateProperty = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(photos[0]);
-    console.log(price);
-    console.log(currencyId);
-    console.log(propertyTypeId);
-    console.log(propertyStatusId);
     const data = {
-      StartDate: startDate,
-      EndDate: endDate,
-      PropertyTypeId: propertyTypeId,
-      PropertyStatusId: propertyStatusId,
-      CurrencyId: currencyId,
-      Price: price,
-      Photos: photos,
+      startDate: startDate,
+      endDate: endDate,
+      propertyTypeId: propertyTypeId,
+      propertyStatusId: propertyStatusId,
+      currencyId: currencyId,
+      price: price,
+      photos: photos,
     };
     const response = await createNewProperty(data);
+    if (!response) {
+      setInfo("Something went wrong. Please try again later.");
+    } else {
+      setInfo("Property created successfully.");
+    }
+    console.log(response);
   };
 
   const fetchCurrencies = async () => {
     const response = await getAll("Currency");
-    if (response && response.status === 200) setCurrencies(response.data);
+    if (response && response.statusCode === 200) setCurrencies(response.data);
   };
 
   const fetchPropertyStatuses = async () => {
     const response = await getAll("PropertyStatus");
-    if (response && response.status === 200) setPropertyStatuses(response.data);
+    if (response && response.statusCode === 200)
+      setPropertyStatuses(response.data);
   };
 
   const fetchPropertyTypes = async () => {
     const response = await getAll("PropertyType");
-    if (response && response.status === 200) setPropertyTypes(response.data);
+    if (response && response.statusCode === 200)
+      setPropertyTypes(response.data);
   };
 
   useEffect(() => {
@@ -60,7 +63,7 @@ const CreateProperty = () => {
 
   return (
     <section className="p-4">
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <form onSubmit={handleSubmit}>
         <div className="form-control w-full max-w-xs">
           <div>
             <label className="label">Listing Start Date</label>
@@ -162,16 +165,20 @@ const CreateProperty = () => {
               type="file"
               multiple={true}
               accept=".jpg, .jpeg, .png"
-              onChange={(e) => {
-                setPhotos(e.target.files);
-                console.log(e.target.files);
-              }}
               className="file-input file-input-bordered file-input-sm w-full max-w-xs"
+              onChange={(e) => {
+                console.log("Setting files");
+                console.log(e.target.files);
+                setPhotos(e.target.files);
+              }}
             />
           </div>
           <button type="submit" className="btn btn-accent p-2 mt-2">
             Create Property
           </button>
+          <div>
+            <p className="text-xs text-red-500">{info}</p>
+          </div>
         </div>
       </form>
     </section>
