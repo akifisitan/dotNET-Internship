@@ -1,6 +1,8 @@
 import { useState } from "react";
 import ListStatuses from "./ListStatuses";
 import CreateStatus from "./CreateStatus";
+import UpdateStatus from "./UpdateStatus";
+import DeleteStatus from "./DeleteStatus";
 
 const Status = () => {
   const [operation, setOperation] = useState("list");
@@ -32,9 +34,9 @@ const Status = () => {
           ) : operation === "create" ? (
             <CreateStatus />
           ) : operation === "update" ? (
-            <div>update</div>
+            <UpdateStatus />
           ) : operation === "delete" ? (
-            <div>delete</div>
+            <DeleteStatus />
           ) : null}
         </div>
       </div>

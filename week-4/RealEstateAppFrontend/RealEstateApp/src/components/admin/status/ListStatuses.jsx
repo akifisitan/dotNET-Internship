@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getAll } from "../../../services/GenericService";
+import { useNavigate } from "react-router-dom";
 
 const ListStatuses = () => {
   const [{ isLoading, data, error }, setState] = useState({
@@ -7,19 +8,32 @@ const ListStatuses = () => {
     data: [],
     error: null,
   });
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     const response = await getAll("PropertyStatus");
     let data = [];
     let error = null;
     if (!response) {
-      error = "An error occurred when reaching the server.";
-    } else if (response.statusCode === 200) {
-      data = response.data;
-    } else if (response.statusCode === 403) {
-      error = "Forbidden";
+      error =
+        "We're sorry, but we couldn't process your request at the moment. Please try again later.";
     } else {
-      error = `Temporary: ${response.statusCode}`;
+      const statusCode = response.statusCode;
+      switch (statusCode) {
+        case 200:
+          data = response.data;
+          break;
+        case 401:
+          navigate("/logout");
+          error = "You are not authorized to perform this action.";
+          break;
+        case 403:
+          error = "You do not have permission perform to this action.";
+          break;
+        default:
+          error = `An unhandled situation ocurred, server response status code: ${statusCode}.`;
+          break;
+      }
     }
     setState({
       data: data,

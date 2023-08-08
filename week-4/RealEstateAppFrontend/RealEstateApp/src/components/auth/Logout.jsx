@@ -8,9 +8,8 @@ const Logout = () => {
   const { setAuthenticated } = useContext(authContext);
 
   useEffect(() => {
-    console.log("Logout");
-    setAuthenticated(false);
     clearToken();
+    setAuthenticated(false);
     const timeoutId = setTimeout(() => {
       navigate("/login");
     }, 3000);
