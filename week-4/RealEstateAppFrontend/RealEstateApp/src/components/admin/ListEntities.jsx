@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAll } from "../../services/GenericService";
+import { getAll } from "../../services/EntityService";
 import { useNavigate } from "react-router-dom";
 
 const ListEntities = ({ entityData }) => {
@@ -77,7 +77,7 @@ const ListEntities = ({ entityData }) => {
             })
           )
         ) : (
-          <p>Loading...</p>
+          <span className="loading loading-spinner loading-lg text-accent"></span>
         )}
       </div>
     </section>

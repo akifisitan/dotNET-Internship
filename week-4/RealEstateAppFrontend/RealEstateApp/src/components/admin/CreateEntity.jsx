@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { insertEntity } from "../../services/GenericService";
+import { insertEntity } from "../../services/EntityService";
 import { useNavigate } from "react-router-dom";
 
 const CreateEntity = ({ entityData }) => {

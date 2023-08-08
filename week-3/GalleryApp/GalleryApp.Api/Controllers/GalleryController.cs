@@ -74,24 +74,22 @@ namespace GalleryApp.Api.Controllers
 
         [HttpPost]
         [Route("saveImageAsBase64String")]
-        public async Task<IActionResult> saveImageAsBase64String(IFormFile file)
+        public async Task<IActionResult> SaveImageAsBase64String(IFormFile file)
         {
             if (file.Length > 0)
             {
                 var photo = new Base64Photo();
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
+                using var memoryStream = new MemoryStream();
+                await file.CopyToAsync(memoryStream);
 
-                    // Upload the file if less than 4 MB  
-                    if (memoryStream.Length < 8 * 1024 * 1024)
-                    {
-                        photo.Value = Convert.ToBase64String(memoryStream.ToArray());
-                    }
-                    _base64Photo.Add(photo);
-                    await _context.SaveChangesAsync();
-                    return Ok();
+                // Upload the file if less than 4 MB  
+                if (memoryStream.Length < 8 * 1024 * 1024)
+                {
+                    photo.Value = Convert.ToBase64String(memoryStream.ToArray());
                 }
+                _base64Photo.Add(photo);
+                await _context.SaveChangesAsync();
+                return Ok();
             }
             return BadRequest();
         }

@@ -7,9 +7,9 @@ import Admin from "./admin/Admin";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import Dashboard from "./Dashboard";
+import CreateProperty from "./CreateProperty";
 
 const App = () => {
-  
   return (
     <div>
       <BrowserRouter>
@@ -31,6 +31,14 @@ const App = () => {
             element={
               <Protected>
                 <Dashboard />
+              </Protected>
+            }
+          />
+          <Route
+            path="/createProperty"
+            element={
+              <Protected>
+                <CreateProperty />
               </Protected>
             }
           />

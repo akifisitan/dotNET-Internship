@@ -4,7 +4,6 @@ import { authContext } from "../context/authContext";
 
 const Navbar = () => {
   const { authenticated } = useContext(authContext);
-  console.log(authenticated);
 
   return (
     <nav className="flex sm:justify-center space-x-4">
@@ -21,11 +20,19 @@ const Navbar = () => {
         Dashboard
       </Link>
       <Link
-        to="/admin"
+        to="/createProperty"
         className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
       >
-        Admin
+        Create Property
       </Link>
+      {authenticated ? (
+        <Link
+          to="/admin"
+          className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
+        >
+          Admin
+        </Link>
+      ) : null}
       {authenticated ? (
         <Link
           to="/logout"

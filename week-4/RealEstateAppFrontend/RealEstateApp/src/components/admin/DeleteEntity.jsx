@@ -1,15 +1,21 @@
 import { useState } from "react";
-import { deleteEntity } from "../../services/GenericService";
+import { deleteEntity } from "../../services/EntityService";
 import { useNavigate } from "react-router-dom";
 
 const DeleteEntity = ({ entityData }) => {
   const [dataId, setDataId] = useState();
-  const [infoMessage, setInfo] = useState(null);
+  const [info, setInfo] = useState(null);
+  const [outcome, setOutcome] = useState("error");
+  const [dismissing, setDismissing] = useState(false);
   const navigate = useNavigate();
   const { name, path } = entityData;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (dismissing) return;
+    console.log("Dismissing: ", dismissing);
+    if (outcome === "success") setOutcome("error");
+    setInfo(null);
     const response = await deleteEntity(path, dataId);
     if (!response) {
       setInfo(
@@ -19,31 +25,37 @@ const DeleteEntity = ({ entityData }) => {
       const statusCode = response.statusCode;
       switch (statusCode) {
         case 204:
-          setInfo(`${name} deleted successfully.`);
+          setInfo(`${name} deleted successfully`);
+          setOutcome("success");
+          break;
+        case 400:
+          setInfo("Please enter a valid id");
           break;
         case 401:
           navigate("/logout");
           break;
         case 403:
-          setInfo("You do not have permission perform to this action.");
+          setInfo("You do not have permission perform to this action");
           break;
         case 404:
-          setInfo(`No ${name.toLowerCase()} found with id: ${dataId}`);
+          setInfo(`No ${name.toLowerCase()} found with this id`);
           break;
         default:
           setInfo(
-            `An unhandled situation ocurred, server response status code: ${statusCode}.`
+            `An unhandled situation ocurred, server response status code: ${statusCode}`
           );
           break;
       }
     }
+    setDismissing(true);
     setTimeout(() => {
       setInfo(null);
-    }, 3000);
+      setDismissing(false);
+    }, 1500);
   };
 
   return (
-    <section className="flex flex-col items-center justify-center">
+    <section className="flex flex-col">
       <h2 className="mb-2 text-xl">Delete {name}</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -65,10 +77,15 @@ const DeleteEntity = ({ entityData }) => {
         >
           Delete
         </button>
+
         <div>
-          <p className="text-white">
-            {infoMessage !== null ? infoMessage : null}
-          </p>
+          {info !== null ? (
+            <div className="toast toast-end">
+              <div className={`alert alert-${outcome}`}>
+                <span>{info}</span>
+              </div>
+            </div>
+          ) : null}
         </div>
       </form>
     </section>
