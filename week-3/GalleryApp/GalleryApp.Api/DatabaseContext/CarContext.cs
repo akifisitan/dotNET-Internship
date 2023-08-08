@@ -7,6 +7,8 @@ namespace GalleryApp.Api.DatabaseContext
     {
 
         public DbSet<Car> Cars { get; set; }
+        public DbSet<Base64Photo> Base64Photos { get; set; }
+        public DbSet<BytePhoto> BytePhotos { get; set; }
 
         public CarContext(DbContextOptions<CarContext> options) : base(options)
         { }
