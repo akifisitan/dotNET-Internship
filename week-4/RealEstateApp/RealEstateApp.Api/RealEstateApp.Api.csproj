@@ -19,8 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTO\PropertyDTO\PropertyImageDTO\" />
-    <Folder Include="DTO\UserDTO\" />
+    <Folder Include="DTO\PropertyDTO\" />
   </ItemGroup>
 
 </Project>

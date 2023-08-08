@@ -45,6 +45,7 @@ namespace RealEstateApp.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] PropertyFieldCreateRequestDTO request)
         {
+            request.Value = request.Value.Trim();
             if (request.Value.IsNullOrEmpty())
             {
                 return BadRequest();
@@ -59,6 +60,7 @@ namespace RealEstateApp.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Put([FromBody] PropertyFieldUpdateRequestDTO request)
         {
+            request.Value = request.Value.Trim();
             if (request.Value.IsNullOrEmpty())
             {
                 return BadRequest();
