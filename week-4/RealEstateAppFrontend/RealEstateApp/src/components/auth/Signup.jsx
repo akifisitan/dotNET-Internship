@@ -79,7 +79,7 @@ const Signup = () => {
             </div>
             <button
               type="submit"
-              className="bg-primary-600 hover:bg-primary-700 focus:ring-primary-800 w-full text-gray-100  focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              className="bg-blue-600 hover:bg-blue-700 w-full text-gray-100 focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
               Sign Up
             </button>
@@ -87,7 +87,7 @@ const Signup = () => {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-medium hover:underline text-primary-500"
+                className="font-medium hover:underline text-blue-500"
               >
                 Login
               </Link>

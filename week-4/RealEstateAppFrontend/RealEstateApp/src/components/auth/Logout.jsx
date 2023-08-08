@@ -1,22 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../helpers/Auth";
+import { authContext } from "../../context/authContext";
 
 const Logout = () => {
   const navigate = useNavigate();
-  clearToken();
+  const { setAuthenticated } = useContext(authContext);
 
   useEffect(() => {
-    // Set a timeout to navigate after 5 seconds
+    console.log("Logout");
+    setAuthenticated(false);
+    clearToken();
     const timeoutId = setTimeout(() => {
-      navigate("/login"); // Replace '/other-page' with the actual path
+      navigate("/login");
     }, 3000);
-
-    // Clean up the timeout if the component unmounts before the timeout is reached
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [navigate]);
+  }, [navigate, setAuthenticated]);
 
   return (
     <section className="flex flex-col items-center justify-center text-2xl">

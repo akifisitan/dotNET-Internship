@@ -1,6 +1,11 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { authContext } from "../context/authContext";
 
 const Navbar = () => {
+  const { authenticated } = useContext(authContext);
+  console.log(authenticated);
+
   return (
     <nav className="flex sm:justify-center space-x-4">
       <Link
@@ -10,23 +15,25 @@ const Navbar = () => {
         Home
       </Link>
       <Link
-        to="/authors"
+        to="/dashboard"
         className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
       >
-        Authors
+        Dashboard
       </Link>
       <Link
-        to="/books"
+        to="/admin"
         className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
       >
-        Books
+        Admin
       </Link>
-      <Link
-        to="/logout"
-        className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
-      >
-        Logout
-      </Link>
+      {authenticated ? (
+        <Link
+          to="/logout"
+          className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
+        >
+          Logout
+        </Link>
+      ) : null}
     </nav>
   );
 };

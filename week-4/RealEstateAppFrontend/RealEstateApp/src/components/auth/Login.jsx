@@ -1,13 +1,15 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../services/AuthService";
 import { storeToken } from "../../helpers/Auth";
+import { authContext } from "../../context/authContext";
 
 const Login = () => {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const [infoMessage, setInfo] = useState(null);
   const navigate = useNavigate();
+  const { setAuthenticated } = useContext(authContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,6 +20,7 @@ const Login = () => {
       const status = response.status;
       switch (status) {
         case 200: {
+          setAuthenticated(true);
           storeToken(response.data.token, response.data.expiration);
           navigate("/");
           break;
@@ -40,7 +43,7 @@ const Login = () => {
       <div className="container mx-auto w-full bg-gray-800 rounded-lg shadow border border-gray-400 md:mt-0 sm:max-w-md xl:p-0 ">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl ">
-            Sign In
+            Login
           </h1>
           <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
             <div>
@@ -73,15 +76,15 @@ const Login = () => {
             </div>
             <button
               type="submit"
-              className="bg-primary-600 hover:bg-primary-700 focus:ring-primary-800 w-full text-gray-100  focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
+              className="bg-blue-600 hover:bg-blue-700 focus:ring-blue-800 w-full text-gray-100  focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
-              Sign in
+              Login
             </button>
             <p className="text-sm font-light text-gray-400">
               Don’t have an account yet?{" "}
               <Link
                 to="/signup"
-                className="font-medium hover:underline text-primary-500"
+                className="font-medium hover:underline text-blue-500"
               >
                 Sign up
               </Link>
