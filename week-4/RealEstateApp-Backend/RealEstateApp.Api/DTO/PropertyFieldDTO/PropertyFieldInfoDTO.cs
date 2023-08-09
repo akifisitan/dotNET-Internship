@@ -11,10 +11,10 @@ namespace RealEstateApp.Api.DTO.PropertyFieldDTO
             Value = string.Empty;
         }
 
-        public PropertyFieldInfoDTO(T propertyStatus)
+        public PropertyFieldInfoDTO(T propertyField)
         {
-            Id = propertyStatus.Id;
-            Value = propertyStatus.Value;
+            Id = propertyField.Id;
+            Value = propertyField.Value;
         }
     }
 }

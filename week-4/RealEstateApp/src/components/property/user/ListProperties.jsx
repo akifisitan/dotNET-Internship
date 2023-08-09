@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { listPropertiesByUser } from "../services/PropertyService";
-import ShowcaseTable from "./ShowcaseTable";
+import { getAllPropertiesByUser } from "../../../services/PropertyService";
+import PropertyTableView from "./PropertyTableView";
 import { useNavigate } from "react-router-dom";
 
 const ListProperties = () => {
@@ -12,7 +12,7 @@ const ListProperties = () => {
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    const response = await listPropertiesByUser();
+    const response = await getAllPropertiesByUser();
     let data = [];
     let error = null;
     if (!response) {
@@ -25,7 +25,7 @@ const ListProperties = () => {
           data = response.data;
           break;
         case 401:
-          navigate("/logout");
+          navigate("/logout", { replace: true });
           break;
         case 403:
           error = "You do not have permission perform to this action.";
@@ -43,9 +43,6 @@ const ListProperties = () => {
       error: error,
     });
   };
-  const navigateToProperty = (id) => {
-    console.log(id);
-  };
 
   useEffect(() => {
     setState({
@@ -62,24 +59,16 @@ const ListProperties = () => {
   }, []);
 
   return (
-    <div>
-      <button className="btn btn-primary" onClick={fetchData}>
-        Refresh
-      </button>
-      <div className="p-2">
-        {!isLoading ? (
-          error ? (
-            <p>{error}</p>
-          ) : (
-            <ShowcaseTable
-              showcaseData={data}
-              navigateToProperty={navigateToProperty}
-            />
-          )
+    <div className="p-2">
+      {!isLoading ? (
+        error ? (
+          <p>{error}</p>
         ) : (
-          <span className="loading loading-spinner loading-lg text-accent"></span>
-        )}
-      </div>
+          <PropertyTableView data={data} />
+        )
+      ) : (
+        <span className="loading loading-spinner loading-lg text-accent"></span>
+      )}
     </div>
   );
 };

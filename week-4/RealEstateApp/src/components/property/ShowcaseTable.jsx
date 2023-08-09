@@ -1,16 +1,22 @@
-// ShowcaseTable.js
-import React from "react";
+import { useNavigate } from "react-router-dom";
 
-const ShowcaseTable = ({ showcaseData, navigateToProperty }) => {
-  const numRows = Math.ceil(showcaseData.length / 7);
+const ShowcaseTable = ({ data }) => {
+  const numRows = Math.ceil(data.length / 7);
+  const navigate = useNavigate();
+  const handleClick = (entry) => {
+    navigate("/details", {
+      replace: false,
+      state: { propertyId: entry.id },
+    });
+  };
 
   const tableRows = Array.from({ length: numRows }, (_, rowIndex) => (
     <tr key={rowIndex}>
-      {showcaseData.slice(rowIndex * 7, (rowIndex + 1) * 7).map((entry) => (
+      {data.slice(rowIndex * 7, (rowIndex + 1) * 7).map((entry) => (
         <td className="p-2" key={entry.id}>
           <img
             className="block m-auto cursor-pointer w-32 h-24"
-            onClick={() => navigateToProperty(entry.id)}
+            onClick={() => handleClick(entry)}
             src={`data:image/jpeg;base64,${entry.thumbnail}`}
             alt="property"
           />

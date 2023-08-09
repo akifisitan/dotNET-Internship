@@ -23,7 +23,7 @@ namespace RealEstateApp.Api.Controllers
             _set = _context.Currencies;
         }
 
-        [Authorize(Roles = UserRoles.Admin)]
+        [Authorize(Roles = UserRoles.User)]
         [HttpGet]
         [Route("list")]
         public async Task<IActionResult> GetAll()

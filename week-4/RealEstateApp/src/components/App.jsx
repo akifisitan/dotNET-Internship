@@ -7,8 +7,10 @@ import Admin from "./admin/Admin";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import Dashboard from "./Dashboard";
-import MyProperties from "./MyProperties";
-import CreateProperty from "./CreateProperty";
+import MyProperties from "./property/user/MyProperties";
+import CreateProperty from "./property/CreateProperty";
+import EditProperty from "./property/EditProperty";
+import DetailedView from "./property/DetailedView";
 
 const App = () => {
   return (
@@ -36,10 +38,26 @@ const App = () => {
             }
           />
           <Route
+            path="/details"
+            element={
+              <Protected>
+                <DetailedView />
+              </Protected>
+            }
+          />
+          <Route
             path="/createProperty"
             element={
               <Protected>
                 <CreateProperty />
+              </Protected>
+            }
+          />
+          <Route
+            path="/editProperty"
+            element={
+              <Protected>
+                <EditProperty />
               </Protected>
             }
           />

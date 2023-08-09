@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { getAll } from "../services/EntityService";
-import { createProperty } from "../services/PropertyService";
+import { getAll } from "../../services/EntityService";
+import { createProperty } from "../../services/PropertyService";
 import { useNavigate } from "react-router-dom";
 
 const CreateProperty = () => {
@@ -39,13 +39,13 @@ const CreateProperty = () => {
       const statusCode = response.statusCode;
       switch (statusCode) {
         case 200:
-          navigate("/dashboard");
+          navigate("/myProperties", { replace: true });
           break;
         case 400:
           setInfo(response.data.message);
           break;
         case 401:
-          navigate("/logout");
+          navigate("/logout", { replace: true });
           break;
         case 403:
           setInfo("You are not authorized to perform this action.");
@@ -105,7 +105,6 @@ const CreateProperty = () => {
             <input
               type="text"
               required
-              defaultValue="01/01/2023"
               onChange={(e) => setStartDate(e.target.value)}
               className="input input-bordered input-sm"
               pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
@@ -119,7 +118,6 @@ const CreateProperty = () => {
               required
               onChange={(e) => setEndDate(e.target.value)}
               className="input input-bordered input-sm"
-              defaultValue="31/12/2023"
               pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
               title="dd/mm/yyyy eg. (31/12/2023)"
             />
@@ -184,8 +182,6 @@ const CreateProperty = () => {
               type="number"
               required
               min={1000}
-              inputMode="numeric"
-              step={100}
               onChange={(e) => setPrice(e.target.value)}
               title="This field is required"
               className="input input-bordered input-sm"

@@ -8,6 +8,7 @@ using RealEstateApp.Api.DTO.PropertyDTO;
 using RealEstateApp.Api.DTO.PropertyFieldDTO;
 using RealEstateApp.Api.DTO.UserDTO;
 using RealEstateApp.Api.Entity;
+using RealEstateApp.Api.Enums;
 
 namespace RealEstateApp.Api.Controllers
 {
@@ -24,15 +25,13 @@ namespace RealEstateApp.Api.Controllers
             _context = context;
         }
 
-        // [Authorize(Roles = UserRoles.User)]
+        [Authorize(Roles = UserRoles.User)]
         [HttpGet]
         [Route("getById")]
         public async Task<IActionResult> GetById(int id)
         {
-            // int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-
             var result = await _context.Properties.AsNoTracking()
-                .Where(p => p.Id == id)
+                .Where(x => x.Id == id && x.Status != (int)EntityState.Deleted)
                 .Include(x => x.PropertyImages)
                 .Include(x => x.User)
                 .Include(x => x.Currency)
@@ -46,36 +45,31 @@ namespace RealEstateApp.Api.Controllers
             var images = new List<PropertyFieldInfoDTO<PropertyImage>>();
             foreach (var image in result.PropertyImages)
             {
-                var newImage = new PropertyFieldInfoDTO<PropertyImage>
-                {
-                    Value = image.Value
-                };
-                images.Add(newImage);
+                images.Add(new PropertyFieldInfoDTO<PropertyImage>(image));
             }
-            var dto = new PropertyQueryDTO
+            var responseDTO = new PropertyGetByIdResponseDTO
             {
                 Id = result.Id,
-                Images = images,
-                Status = new PropertyFieldInfoDTO<PropertyStatus>(result.PropertyStatus),
-                Type = new PropertyFieldInfoDTO<PropertyType>(result.PropertyType),
+                Price = result.Price,
+                StartDate = result.StartDate.ToShortDateString(),
+                EndDate = result.EndDate.ToShortDateString(),
+                PropertyImages = images,
+                PropertyStatus = new PropertyFieldInfoDTO<PropertyStatus>(result.PropertyStatus),
+                PropertyType = new PropertyFieldInfoDTO<PropertyType>(result.PropertyType),
                 Currency = new PropertyFieldInfoDTO<Currency>(result.Currency),
-                User = new UserInfoDTO(result.User),
-                StartDate = result.StartDate,
-                EndDate = result.EndDate
+                User = new UserInfoDTO(result.User)
             };
-            System.Console.WriteLine(dto);
-            return Ok(dto);
+            return Ok(responseDTO);
         }
 
         [Authorize(Roles = UserRoles.User)]
         [HttpGet]
-        [Route("getByUserId")]
-        public async Task<IActionResult> ListByUser()
+        [Route("getAllByUserId")]
+        public async Task<IActionResult> GetAllByUserId()
         {
             int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
-
             var result = await _context.Properties.AsNoTracking()
-                .Where(x => x.UserId == userId)
+                .Where(x => x.UserId == userId && x.Status != (int)EntityState.Deleted)
                 .Include(x => x.PropertyImages)
                 .Include(x => x.User)
                 .Include(x => x.Currency)
@@ -86,7 +80,7 @@ namespace RealEstateApp.Api.Controllers
             {
                 return NotFound();
             }
-            var dtos = new List<PropertyListDTO>();
+            var responseDTO = new List<PropertyListDTO>();
             foreach (var property in result)
             {
                 var image = new PropertyFieldInfoDTO<PropertyImage>
@@ -103,9 +97,48 @@ namespace RealEstateApp.Api.Controllers
                     Currency = property.Currency.Value,
                     Price = property.Price
                 };
-                dtos.Add(dto);
+                responseDTO.Add(dto);
             }
-            return Ok(dtos);
+            return Ok(responseDTO);
+        }
+
+        [Authorize(Roles = UserRoles.User)]
+        [HttpGet]
+        [Route("getAll")]
+        public async Task<IActionResult> GetAll()
+        {
+            int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var result = await _context.Properties.AsNoTracking()
+                .Where(x => x.Status != (int)EntityState.Deleted)
+                .Include(x => x.PropertyImages)
+                .Include(x => x.User)
+                .Include(x => x.Currency)
+                .Include(x => x.PropertyStatus)
+                .Include(x => x.PropertyType)
+                .ToListAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            var responseDTO = new List<PropertyListDTO>();
+            foreach (var property in result)
+            {
+                var image = new PropertyFieldInfoDTO<PropertyImage>
+                {
+                    Value = property.PropertyImages.First().Value
+                };
+                var dto = new PropertyListDTO
+                {
+                    Id = property.Id,
+                    Thumbnail = image.Value,
+                    Status = property.PropertyStatus.Value,
+                    Type = property.PropertyType.Value,
+                    Currency = property.Currency.Value,
+                    Price = property.Price
+                };
+                responseDTO.Add(dto);
+            }
+            return Ok(responseDTO);
         }
 
         [Authorize(Roles = UserRoles.User)]
@@ -120,7 +153,7 @@ namespace RealEstateApp.Api.Controllers
                 System.Globalization.CultureInfo.InvariantCulture,
                 System.Globalization.DateTimeStyles.None, out DateTime parsedEndDate))
             {
-                response.Message = "Please enter a valid date in dd/MM/yyyy format.";
+                response.Message = "Please enter a valid date in MM/dd/yyyy format.";
                 return BadRequest(response);
             }
             if (parsedStartDate > parsedEndDate)
@@ -195,8 +228,121 @@ namespace RealEstateApp.Api.Controllers
             return Ok(response);
         }
 
+        [Authorize(Roles = UserRoles.User)]
+        [HttpPut]
+        public async Task<IActionResult> Update([FromForm] PropertyUpdateRequestDTO request)
+        {
+            var response = new GenericResponse<PropertyUpdateResponseDTO>();
+            var item = await _context.Properties
+                .Where(x => x.Id == request.Id && x.Status != (int)EntityStatus.Deleted)
+                .Include(x => x.PropertyImages)
+                .Include(x => x.User)
+                .Include(x => x.Currency)
+                .Include(x => x.PropertyStatus)
+                .Include(x => x.PropertyType)
+                .SingleOrDefaultAsync();
 
+            if (item == null)
+            {
+                response.Message = "No property found with the given id.";
+                return NotFound(response);
+            }
+            int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            if (userId != item.UserId && !User.IsInRole(UserRoles.Admin))
+            {
+                response.Message = "You are not authorized to update this property.";
+                return Unauthorized(response);
+            }
+            if (!DateTime.TryParseExact(request.StartDate, "dd/MM/yyyy",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out DateTime parsedStartDate) ||
+                !DateTime.TryParseExact(request.EndDate, "dd/MM/yyyy",
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out DateTime parsedEndDate))
+            {
+                response.Message = "Please enter a valid date in MM/dd/yyyy format.";
+                return BadRequest(response);
+            }
+            if (parsedStartDate > parsedEndDate)
+            {
+                response.Message = "Please make sure the start date is earlier than the end date.";
+                return BadRequest(response);
+            }
+            var imageStrings = new List<string>();
 
+            if (request.Photos != null)
+            {
+                foreach (var file in request.Photos)
+                {
+                    if (file.Length > 0)
+                    {
+                        using var memoryStream = new MemoryStream();
+                        await file.CopyToAsync(memoryStream);
+
+                        // upload the file if less than 4 mb  
+                        if (memoryStream.Length < 4 * 1024 * 1024)
+                        {
+                            var photo = Convert.ToBase64String(memoryStream.ToArray());
+                            imageStrings.Add(photo);
+                        }
+                        else
+                        {
+                            response.Message = "One or more of the images is too large.";
+                            return BadRequest(response);
+                        }
+                    }
+                }
+                if (imageStrings.Count == 0)
+                {
+                    response.Message = "Please upload at least one image.";
+                    return BadRequest(response);
+                }
+                foreach (var imageString in imageStrings)
+                {
+                    var newImage = new PropertyImage
+                    {
+                        PropertyId = request.Id,
+                        Value = imageString
+                    };
+                    _context.PropertyImages.Add(newImage);
+                }
+            }
+            var propertyImages = new List<string>();
+            foreach (var image in item.PropertyImages)
+            {
+                propertyImages.Add(image.Value);
+            }
+            if (imageStrings.Count > 0)
+            {
+                foreach (var image in imageStrings)
+                {
+                    propertyImages.Add(image);
+                }
+            }
+            item.Price = request.Price != null ? (int)request.Price : item.Price;
+            item.StartDate = parsedStartDate;
+            item.EndDate = parsedEndDate;
+            item.PropertyTypeId = request.PropertyTypeId != null ? (int)request.PropertyTypeId : item.PropertyTypeId;
+            item.PropertyTypeId = request.PropertyTypeId != null ? (int)request.PropertyTypeId : item.PropertyTypeId;
+            item.PropertyStatusId = request.PropertyStatusId != null ? (int)request.PropertyStatusId : item.PropertyStatusId;
+            item.CurrencyId = request.CurrencyId != null ? (int)request.CurrencyId : item.CurrencyId;
+            await _context.SaveChangesAsync();
+
+            var data = new PropertyUpdateResponseDTO
+            {
+                Id = item.Id,
+                StartDate = parsedStartDate,
+                EndDate = parsedEndDate,
+                TypeId = item.PropertyTypeId,
+                StatusId = item.PropertyStatusId,
+                CurrencyId = item.CurrencyId,
+                Price = item.Price,
+                Images = propertyImages
+            };
+            response.Data = data;
+            response.Message = "Property Update Successful.";
+            return Ok(response);
+
+        }
     }
-
 }
