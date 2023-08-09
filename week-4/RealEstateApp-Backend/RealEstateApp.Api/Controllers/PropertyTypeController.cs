@@ -29,6 +29,7 @@ namespace RealEstateApp.Api.Controllers
         public async Task<IActionResult> GetAll()
         {
             var result = await _set
+                .AsNoTracking()
                 .Where(p => p.Status != (int)EntityStatus.Deleted)
                 .ToListAsync();
 

@@ -20,10 +20,10 @@ const Navbar = () => {
         Dashboard
       </Link>
       <Link
-        to="/createProperty"
+        to="/myProperties"
         className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
       >
-        Create Property
+        My Properties
       </Link>
       {authenticated ? (
         <Link

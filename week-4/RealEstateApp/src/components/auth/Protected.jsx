@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import { Navigate } from "react-router-dom";
-import { isLoggedIn, isTokenExpired } from "../../helpers/Auth";
+import { isTokenExpired } from "../../helpers/Auth";
+import { authContext } from "../../context/authContext";
 
 const Protected = ({ children }) => {
-  if (!isLoggedIn() || isTokenExpired()) {
+  const { authenticated, setAuthenticated } = useContext(authContext);
+  if (!authenticated || isTokenExpired()) {
+    setAuthenticated(false);
     return <Navigate to="/login" replace />;
   }
   return children;

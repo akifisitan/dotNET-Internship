@@ -7,6 +7,7 @@ import Admin from "./admin/Admin";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import Dashboard from "./Dashboard";
+import MyProperties from "./MyProperties";
 import CreateProperty from "./CreateProperty";
 
 const App = () => {
@@ -39,6 +40,14 @@ const App = () => {
             element={
               <Protected>
                 <CreateProperty />
+              </Protected>
+            }
+          />
+          <Route
+            path="/myProperties"
+            element={
+              <Protected>
+                <MyProperties />
               </Protected>
             }
           />

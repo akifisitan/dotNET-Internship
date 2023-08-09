@@ -91,7 +91,8 @@ namespace RealEstateApp.Api.Controllers
             User newUser = new User()
             {
                 Name = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                Username = user.UserName
             };
             _realEstateContext.Users.Add(newUser);
             await _realEstateContext.SaveChangesAsync();
@@ -133,7 +134,8 @@ namespace RealEstateApp.Api.Controllers
             User newUser = new User()
             {
                 Name = user.UserName,
-                Email = user.Email
+                Email = user.Email,
+                Username = user.UserName
             };
             _realEstateContext.Users.Add(newUser);
             await _realEstateContext.SaveChangesAsync();

@@ -5,7 +5,7 @@
         public PropertyStatus() { }
         public PropertyStatus(string status)
         {
-            base.Value = status;
+            Value = status;
         }
     }
 }

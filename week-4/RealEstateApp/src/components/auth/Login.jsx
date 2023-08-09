@@ -9,7 +9,9 @@ const Login = () => {
   const [password, setPassword] = useState();
   const [infoMessage, setInfo] = useState(null);
   const navigate = useNavigate();
-  const { setAuthenticated } = useContext(authContext);
+  const { authenticated, setAuthenticated } = useContext(authContext);
+
+  if (authenticated) navigate("/");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +27,9 @@ const Login = () => {
           navigate("/");
           break;
         }
+        case 400:
+          setInfo("Invalid parameters");
+          break;
         case 401:
           setInfo("Invalid username or password");
           break;

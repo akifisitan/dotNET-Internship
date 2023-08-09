@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import { getAll } from "../services/EntityService";
-import { createNewProperty } from "../services/PropertyService";
+import { createProperty } from "../services/PropertyService";
+import { useNavigate } from "react-router-dom";
 
 const CreateProperty = () => {
+  const navigate = useNavigate();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [propertyTypeId, setPropertyTypeId] = useState(-1);
@@ -17,6 +19,10 @@ const CreateProperty = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) {
+      setInfo("Please fill all the fields.");
+      return;
+    }
     const data = {
       startDate: startDate,
       endDate: endDate,
@@ -26,13 +32,42 @@ const CreateProperty = () => {
       price: price,
       photos: photos,
     };
-    const response = await createNewProperty(data);
+    const response = await createProperty(data);
     if (!response) {
       setInfo("Something went wrong. Please try again later.");
     } else {
-      setInfo("Property created successfully.");
+      const statusCode = response.statusCode;
+      switch (statusCode) {
+        case 200:
+          navigate("/dashboard");
+          break;
+        case 400:
+          setInfo(response.data.message);
+          break;
+        case 401:
+          navigate("/logout");
+          break;
+        case 403:
+          setInfo("You are not authorized to perform this action.");
+          break;
+      }
     }
     console.log(response);
+  };
+
+  const validate = () => {
+    if (
+      startDate === "" ||
+      endDate === "" ||
+      propertyTypeId === -1 ||
+      propertyStatusId === -1 ||
+      currencyId === -1 ||
+      price === -1 ||
+      photos.length === 0
+    ) {
+      return false;
+    }
+    return true;
   };
 
   const fetchCurrencies = async () => {
@@ -64,16 +99,15 @@ const CreateProperty = () => {
   return (
     <section className="p-4">
       <form onSubmit={handleSubmit}>
-        <div className="form-control w-full max-w-xs">
+        <div className="form-control mx-auto w-full max-w-xs text-center">
           <div>
             <label className="label">Listing Start Date</label>
             <input
               type="text"
               required
-              value={startDate}
+              defaultValue="01/01/2023"
               onChange={(e) => setStartDate(e.target.value)}
               className="input input-bordered input-sm"
-              placeholder="01/01/2023"
               pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
               title="dd/mm/yyyy eg. (31/12/2023)"
             />
@@ -83,10 +117,9 @@ const CreateProperty = () => {
             <input
               type="text"
               required
-              value={endDate}
               onChange={(e) => setEndDate(e.target.value)}
               className="input input-bordered input-sm"
-              placeholder="31/12/2023"
+              defaultValue="31/12/2023"
               pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
               title="dd/mm/yyyy eg. (31/12/2023)"
             />

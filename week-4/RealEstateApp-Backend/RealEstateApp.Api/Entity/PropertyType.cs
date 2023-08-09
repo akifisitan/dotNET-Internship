@@ -5,7 +5,7 @@
         public PropertyType() { }
         public PropertyType(string type)
         {
-            base.Value = type;
+            Value = type;
         }
     }
 }
