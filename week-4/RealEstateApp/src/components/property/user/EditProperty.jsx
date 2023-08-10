@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { getAll, getById } from "../../services/EntityService";
-import { updateProperty } from "../../services/PropertyService";
+import { getAll, getById, deleteEntity } from "../../../services/EntityService";
+import { updateProperty } from "../../../services/PropertyService";
 import { useNavigate, useLocation } from "react-router-dom";
-import SelectMap from "../map/SelectMap";
-import { defaultLatitude, defaultLongitude } from "../../helpers/MapData";
+import SelectMap from "../../map/SelectMap";
+import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
 
 const EditProperty = () => {
   const [startDate, setStartDate] = useState("");
@@ -49,7 +49,7 @@ const EditProperty = () => {
       const statusCode = response.statusCode;
       switch (statusCode) {
         case 200:
-          navigate("/myProperties", { replace: true });
+          navigate("/dashboard", { replace: true });
           break;
         case 400:
           setInfo(response.data.message);
@@ -107,11 +107,31 @@ const EditProperty = () => {
     }
   };
 
-  const handleDelete = () => {
-    if (!confirm("Delete")) {
-      return;
+  const handleDelete = async () => {
+    const response = await deleteEntity("Property", location.state.propertyId);
+    if (!response) {
+      setInfo(
+        "We're sorry, but we couldn't process your request at the moment. Please try again later."
+      );
+    } else {
+      const statusCode = response.statusCode;
+      switch (statusCode) {
+        case 204:
+          navigate("/dashboard", { replace: true });
+          break;
+        case 401:
+          navigate("/logout", { replace: true });
+          break;
+        case 403:
+          setInfo("You do not have permission perform to this action");
+          break;
+        default:
+          setInfo(
+            `An unhandled situation ocurred, server response status code: ${statusCode}`
+          );
+          break;
+      }
     }
-    console.log(location.state.propertyId);
   };
 
   const fetchCurrencies = async () => {
@@ -134,7 +154,7 @@ const EditProperty = () => {
   useEffect(() => {
     console.log(location.state);
     if (!location.state) {
-      navigate("/myProperties");
+      navigate("/dashboard");
     } else {
       fetchData();
     }

@@ -59,7 +59,7 @@ const ListProperties = () => {
   }, []);
 
   return (
-    <div className="p-2">
+    <div className="flex p-2">
       {!isLoading ? (
         error ? (
           <p>{error}</p>
@@ -67,7 +67,9 @@ const ListProperties = () => {
           <PropertyTableView data={data} />
         )
       ) : (
-        <span className="loading loading-spinner loading-lg text-accent"></span>
+        <div className="w-12 mx-auto">
+          <span className="loading loading-spinner loading-lg text-accent"></span>
+        </div>
       )}
     </div>
   );

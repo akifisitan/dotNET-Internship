@@ -147,29 +147,58 @@ namespace RealEstateApp.Api.Controllers
             return Ok(responseDTO);
         }
 
-        // [Authorize(Roles = UserRoles.User)]
         [HttpGet]
-        [Route("getAllLocations")]
-        public async Task<IActionResult> GetAllPropertyLocations()
+        [Route("getAnalyticsByUserId")]
+        public async Task<IActionResult> GetAnalyticsByUserId()
         {
+            int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var result = await _context.Properties.AsNoTracking()
-                .Where(x => x.Status != (int)EntityStatus.Deleted)
+                .Where(x => x.UserId == userId && x.Status != (int)EntityStatus.Deleted)
+                .Include(x => x.Currency)
+                .Include(x => x.PropertyStatus)
+                .Include(x => x.PropertyType)
                 .ToListAsync();
             if (result == null)
             {
                 return NotFound();
             }
-            var responseDTO = new List<PropertyGetLocationResponseDTO>();
+            var currencyDict = new Dictionary<string, int>();
+            var statusDict = new Dictionary<string, int>();
+            var typeDict = new Dictionary<string, int>();
             foreach (var property in result)
             {
-                var dto = new PropertyGetLocationResponseDTO
+                if (currencyDict.ContainsKey(property.Currency.Value))
                 {
-                    Id = property.Id,
-                    Latitude = property.Latitude,
-                    Longitude = property.Longitude
-                };
-                responseDTO.Add(dto);
+                    currencyDict[property.Currency.Value] += 1;
+                }
+                else
+                {
+                    currencyDict.Add(property.Currency.Value, 1);
+                }
+                if (statusDict.ContainsKey(property.PropertyStatus.Value))
+                {
+                    statusDict[property.PropertyStatus.Value] += 1;
+                }
+                else
+                {
+                    statusDict.Add(property.PropertyStatus.Value, 1);
+                }
+                if (typeDict.ContainsKey(property.PropertyType.Value))
+                {
+                    typeDict[property.PropertyType.Value] += 1;
+                }
+                else
+                {
+                    typeDict.Add(property.PropertyType.Value, 1);
+                }
             }
+            var responseDTO = new PropertyGetAnalyticsByUserIdDTO
+            {
+                Currencies = currencyDict,
+                Statuses = statusDict,
+                Types = typeDict
+            };
+
             return Ok(responseDTO);
         }
 
@@ -383,6 +412,26 @@ namespace RealEstateApp.Api.Controllers
             response.Message = "Property Update Successful.";
             return Ok(response);
 
+        }
+
+        [Authorize(Roles = UserRoles.User)]
+        [HttpDelete]
+        public async Task<IActionResult> Delete(int id)
+        {
+            int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
+            var item = await _context.Properties
+                .SingleOrDefaultAsync(x => x.Id == id && x.Status != (int)EntityStatus.Deleted);
+            if (item == null)
+            {
+                return NotFound();
+            }
+            if (item.UserId != userId && !User.IsInRole(UserRoles.Admin))
+            {
+                return Unauthorized();
+            }
+            item.Status = (int)EntityStatus.Deleted;
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
     }
 }

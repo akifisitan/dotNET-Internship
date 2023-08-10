@@ -1,7 +1,7 @@
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
 
-const DetailMap = ({ lat, long, children }) => {
+const DetailMap = ({ lat, long, size, children }) => {
   return (
     <MapContainer
       center={[lat, long]}
@@ -9,10 +9,10 @@ const DetailMap = ({ lat, long, children }) => {
       zoomControl={false}
       zoom={5}
       style={{
-        height: "350px",
+        height: size ? "80vh" : "350px",
         position: "relative",
         outline: "none",
-        maxWidth: "696px",
+        maxWidth: size ? "1000px" : "696px",
         display: "block",
         margin: "15px auto",
         width: "100%",

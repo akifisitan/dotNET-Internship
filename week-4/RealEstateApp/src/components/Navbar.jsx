@@ -8,17 +8,15 @@ const Navbar = () => {
   return (
     <nav className="navbar bg-base-100">
       <div className="navbar-start">
-        <Link to="/" className="btn btn-ghost normal-case text-base">
-          Home
+        <Link to="/" className="btn btn-ghost font-bold normal-case text-lg">
+          RealEstate
+        </Link>
+
+        <Link to="/map" className="btn btn-ghost normal-case text-base">
+          Map
         </Link>
         <Link to="/dashboard" className="btn btn-ghost normal-case text-base">
           Dashboard
-        </Link>
-        <Link
-          to="/myProperties"
-          className="btn btn-ghost normal-case text-base"
-        >
-          My Properties
         </Link>
       </div>
       <div className="navbar-end">

@@ -3,12 +3,13 @@ import { getAllProperties } from "../../services/PropertyService";
 import ShowcaseTable from "./ShowcaseTable";
 import { useNavigate } from "react-router-dom";
 
-const PropertyShowcase = () => {
+const PropertyShowcase = ({ filters }) => {
   const [{ isLoading, data, error }, setState] = useState({
     isLoading: false,
     data: [],
     error: null,
   });
+  const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -46,32 +47,47 @@ const PropertyShowcase = () => {
   };
 
   useEffect(() => {
-    setState({
-      error: null,
-      isLoading: true,
-    });
-    fetchData();
-  }, []);
+    if (!filters) {
+      setState({
+        error: null,
+        isLoading: true,
+      });
+      fetchData();
+    } else {
+      console.log("Filtering data...");
+      console.log(filters);
+      const newData = data.filter((item) => {
+        for (const key in filters) {
+          if (filters[key] && item[key] !== filters[key]) {
+            return false;
+          }
+        }
+        return true;
+      });
+      setFilteredData(newData);
+      console.log(data);
+    }
+    console.log(data);
+  }, [filters]);
 
   return (
     <div>
-      <div className="p-2">
+      <div className="flex p-2">
         {!isLoading ? (
           error ? (
             <p>{error}</p>
           ) : (
-            <ShowcaseTable data={data} />
+            <ShowcaseTable
+              data={
+                filteredData && filteredData.length != 0 ? filteredData : data
+              }
+            />
           )
         ) : (
-          <span className="loading loading-spinner loading-lg text-accent"></span>
+          <div className="w-12 mx-auto">
+            <span className="loading loading-spinner loading-lg text-accent"></span>
+          </div>
         )}
-      </div>
-
-      <div className="join">
-        <button className="join-item btn">1</button>
-        <button className="join-item btn btn-active">2</button>
-        <button className="join-item btn">3</button>
-        <button className="join-item btn">4</button>
       </div>
     </div>
   );

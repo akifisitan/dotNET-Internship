@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { getAll } from "../../services/EntityService";
-import { createProperty } from "../../services/PropertyService";
+import { getAll } from "../../../services/EntityService";
+import { createProperty } from "../../../services/PropertyService";
 import { useNavigate } from "react-router-dom";
-import SelectMap from "../map/SelectMap";
-import { defaultLatitude, defaultLongitude } from "../../helpers/MapData";
+import SelectMap from "../../map/SelectMap";
+import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
 
 const CreateProperty = () => {
   const navigate = useNavigate();
@@ -46,7 +46,7 @@ const CreateProperty = () => {
       const statusCode = response.statusCode;
       switch (statusCode) {
         case 200:
-          navigate("/myProperties", { replace: true });
+          navigate("/dashboard", { replace: true });
           break;
         case 400:
           setInfo(response.data.message);

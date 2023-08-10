@@ -1,29 +1,19 @@
 import PropertyShowcase from "./property/PropertyShowcase";
+import Filters from "./Filters";
+import { useState } from "react";
 
 const Home = () => {
+  const [filters, setFilters] = useState();
+  console.log("home re-rendered");
   return (
-    <div className="p-4">
+    <div className="p-2">
       <h1 className="text-2xl p-1">Home Page</h1>
       <div className="flex flex-row">
-        <div className="basis-1/12">
-          Filters
-          <ul className="menu bg-base-200 rounded-box">
-            <li>
-              <a>Price</a>
-            </li>
-            <li>
-              <a>Currency</a>
-            </li>
-            <li>
-              <a>Type</a>
-            </li>
-            <li>
-              <a>Status</a>
-            </li>
-          </ul>
+        <div className="basis-1/4">
+          <Filters setFilters={setFilters} />
         </div>
-        <div className="basis-3/4">
-          <PropertyShowcase />
+        <div className="basis-4/5">
+          <PropertyShowcase filters={filters} />
         </div>
       </div>
     </div>

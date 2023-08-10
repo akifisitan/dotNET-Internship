@@ -7,10 +7,10 @@ import Admin from "./admin/Admin";
 import Home from "./Home";
 import Navbar from "./Navbar";
 import Dashboard from "./Dashboard";
-import MyProperties from "./property/user/MyProperties";
-import CreateProperty from "./property/CreateProperty";
-import EditProperty from "./property/EditProperty";
+import CreateProperty from "./property/user/CreateProperty";
+import EditProperty from "./property/user/EditProperty";
 import DetailedView from "./property/DetailedView";
+import PropertyMap from "./PropertyMap";
 
 const App = () => {
   return (
@@ -62,10 +62,10 @@ const App = () => {
             }
           />
           <Route
-            path="/myProperties"
+            path="/map"
             element={
               <Protected>
-                <MyProperties />
+                <PropertyMap />
               </Protected>
             }
           />
