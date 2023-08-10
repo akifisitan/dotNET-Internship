@@ -147,6 +147,32 @@ namespace RealEstateApp.Api.Controllers
             return Ok(responseDTO);
         }
 
+        // [Authorize(Roles = UserRoles.User)]
+        [HttpGet]
+        [Route("getAllLocations")]
+        public async Task<IActionResult> GetAllPropertyLocations()
+        {
+            var result = await _context.Properties.AsNoTracking()
+                .Where(x => x.Status != (int)EntityStatus.Deleted)
+                .ToListAsync();
+            if (result == null)
+            {
+                return NotFound();
+            }
+            var responseDTO = new List<PropertyGetLocationResponseDTO>();
+            foreach (var property in result)
+            {
+                var dto = new PropertyGetLocationResponseDTO
+                {
+                    Id = property.Id,
+                    Latitude = property.Latitude,
+                    Longitude = property.Longitude
+                };
+                responseDTO.Add(dto);
+            }
+            return Ok(responseDTO);
+        }
+
         [Authorize(Roles = UserRoles.User)]
         [HttpPost]
         public async Task<IActionResult> Create([FromForm] PropertyCreateRequestDTO request)

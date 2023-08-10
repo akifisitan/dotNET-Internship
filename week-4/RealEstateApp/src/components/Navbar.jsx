@@ -6,41 +6,33 @@ const Navbar = () => {
   const { authenticated } = useContext(authContext);
 
   return (
-    <nav className="flex sm:justify-center space-x-4">
-      <Link
-        to="/"
-        className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
-      >
-        Home
-      </Link>
-      <Link
-        to="/dashboard"
-        className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
-      >
-        Dashboard
-      </Link>
-      <Link
-        to="/myProperties"
-        className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
-      >
-        My Properties
-      </Link>
-      {authenticated ? (
-        <Link
-          to="/admin"
-          className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
-        >
-          Admin
+    <nav className="navbar bg-base-100">
+      <div className="navbar-start">
+        <Link to="/" className="btn btn-ghost normal-case text-base">
+          Home
         </Link>
-      ) : null}
-      {authenticated ? (
-        <Link
-          to="/logout"
-          className="rounded-lg px-3 py-2 text-gray-100 font-medium hover:text-blue-600"
-        >
-          Logout
+        <Link to="/dashboard" className="btn btn-ghost normal-case text-base">
+          Dashboard
         </Link>
-      ) : null}
+        <Link
+          to="/myProperties"
+          className="btn btn-ghost normal-case text-base"
+        >
+          My Properties
+        </Link>
+      </div>
+      <div className="navbar-end">
+        {authenticated ? (
+          <Link to="/admin" className="btn btn-ghost normal-case text-base">
+            Admin
+          </Link>
+        ) : null}
+        {authenticated ? (
+          <Link to="/logout" className="btn btn-ghost normal-case text-base">
+            Logout
+          </Link>
+        ) : null}
+      </div>
     </nav>
   );
 };

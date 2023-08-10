@@ -8,7 +8,6 @@ const SelectMap = ({ lat, long, setLat, setLong }) => {
     map.setView(coords, map.getZoom());
     return null;
   }
-
   useEffect(() => {
     setLat(lat);
     setLong(long);

@@ -3,6 +3,7 @@ import { getAll, getById } from "../../services/EntityService";
 import { updateProperty } from "../../services/PropertyService";
 import { useNavigate, useLocation } from "react-router-dom";
 import SelectMap from "../map/SelectMap";
+import { defaultLatitude, defaultLongitude } from "../../helpers/MapData";
 
 const EditProperty = () => {
   const [startDate, setStartDate] = useState("");
@@ -10,14 +11,15 @@ const EditProperty = () => {
   const [propertyTypeId, setPropertyTypeId] = useState(-1);
   const [propertyStatusId, setPropertyStatusId] = useState(-1);
   const [currencyId, setCurrencyId] = useState(-1);
-  const [price, setPrice] = useState(-1);
+  const [price, setPrice] = useState(0);
   const [photos, setPhotos] = useState([]);
+  const [newPhotos, setNewPhotos] = useState([]);
   const [info, setInfo] = useState(null);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [propertyStatuses, setPropertyStatuses] = useState([]);
   const [currencies, setCurrencies] = useState([]);
-  const [lat, setLat] = useState(-1);
-  const [long, setLong] = useState(-1);
+  const [lat, setLat] = useState(defaultLatitude);
+  const [long, setLong] = useState(defaultLongitude);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -28,16 +30,18 @@ const EditProperty = () => {
       return;
     }
     const data = {
+      id: location.state.propertyId,
       startDate: startDate,
       endDate: endDate,
       propertyTypeId: propertyTypeId,
       propertyStatusId: propertyStatusId,
       currencyId: currencyId,
       price: price,
-      photos: photos,
+      photos: newPhotos,
       latitude: lat.toFixed(2),
       longitude: long.toFixed(2),
     };
+    console.log(data.id);
     const response = await updateProperty(data);
     if (!response) {
       setInfo("Something went wrong. Please try again later.");
@@ -45,7 +49,7 @@ const EditProperty = () => {
       const statusCode = response.statusCode;
       switch (statusCode) {
         case 200:
-          navigate("/dashboard");
+          navigate("/myProperties", { replace: true });
           break;
         case 400:
           setInfo(response.data.message);
@@ -68,7 +72,7 @@ const EditProperty = () => {
       propertyTypeId === -1 ||
       propertyStatusId === -1 ||
       currencyId === -1 ||
-      price === -1 ||
+      price === 0 ||
       photos.length === 0
     ) {
       return false;
@@ -94,10 +98,20 @@ const EditProperty = () => {
       setStartDate(response.data.startDate);
       setEndDate(response.data.endDate);
       setPrice(response.data.price);
+      setPropertyStatusId(response.data.propertyStatus.id);
+      setPropertyTypeId(response.data.propertyType.id);
+      setCurrencyId(response.data.currency.id);
       setLat(response.data.latitude);
       setLong(response.data.longitude);
-      // do something about response.data.propertyImages
+      setPhotos(response.data.propertyImages);
     }
+  };
+
+  const handleDelete = () => {
+    if (!confirm("Delete")) {
+      return;
+    }
+    console.log(location.state.propertyId);
   };
 
   const fetchCurrencies = async () => {
@@ -118,6 +132,7 @@ const EditProperty = () => {
   };
 
   useEffect(() => {
+    console.log(location.state);
     if (!location.state) {
       navigate("/myProperties");
     } else {
@@ -127,34 +142,45 @@ const EditProperty = () => {
 
   return (
     <section className="flex flex-row">
-      <div className="basis-1/2 p-2">
-        <form onSubmit={handleSubmit} className="form-control w-full max-w-xs">
+      <div className="basis-1/3">
+        <form
+          onSubmit={handleSubmit}
+          className="form-control w-full max-w-xs mx-auto"
+        >
           <div>
-            <label className="label">Listing Start Date</label>
+            <label className="label">Edit Date Range</label>
             <input
               type="text"
               required
               value={startDate}
+              minLength={10}
+              maxLength={10}
               onChange={(e) => setStartDate(e.target.value)}
-              className="input input-bordered input-sm"
+              className="input input-bordered input-sm inline-block w-24 mr-2"
               pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
               title="dd/mm/yyyy eg. (31/12/2023)"
             />
-          </div>
-          <div>
-            <label className="label">Listing End Date</label>
+            <p className="inline-block">-</p>
             <input
               type="text"
               required
-              onChange={(e) => setEndDate(e.target.value)}
-              className="input input-bordered input-sm"
               value={endDate}
+              minLength={10}
+              maxLength={10}
+              onChange={(e) => setEndDate(e.target.value)}
+              className="input input-bordered input-sm inline-block w-24 ml-2"
               pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
               title="dd/mm/yyyy eg. (31/12/2023)"
             />
+            <button
+              onClick={handleDelete}
+              className="btn btn-error btn-sm ml-4 inline-block"
+            >
+              Delete
+            </button>
           </div>
           <div>
-            <label className="label">Property Type</label>
+            <label className="label">Edit Property Type</label>
             <select
               value={propertyTypeId}
               className="select select-bordered select-sm w-full max-w-xs"
@@ -172,7 +198,7 @@ const EditProperty = () => {
             </select>
           </div>
           <div>
-            <label className="label">Property Status</label>
+            <label className="label">Edit Property Status</label>
             <select
               value={propertyStatusId}
               className="select select-bordered select-sm w-full max-w-xs"
@@ -190,7 +216,7 @@ const EditProperty = () => {
             </select>
           </div>
           <div>
-            <label className="label">Currency</label>
+            <label className="label">Edit Currency</label>
             <select
               value={currencyId}
               className="select select-bordered select-sm w-full max-w-xs"
@@ -208,7 +234,7 @@ const EditProperty = () => {
             </select>
           </div>
           <div>
-            <label className="label">Price</label>
+            <label className="label">Edit Price</label>
             <input
               type="number"
               required
@@ -221,30 +247,43 @@ const EditProperty = () => {
             />
           </div>
           <div>
-            <label className="label">Property Images</label>
+            <label className="label">Add Property Images</label>
             <input
               type="file"
               multiple={true}
               accept=".jpg, .jpeg, .png"
               className="file-input file-input-bordered file-input-sm w-full max-w-xs"
               onChange={(e) => {
-                console.log("Setting files");
-                console.log(e.target.files);
-                setPhotos(e.target.files);
+                setNewPhotos(e.target.files);
               }}
             />
           </div>
           <button type="submit" className="btn btn-accent p-2 mt-2">
-            Create Property
+            Edit Property
           </button>
           <div>
             <p className="text-xs text-red-500">{info}</p>
           </div>
         </form>
       </div>
-      <div className="basis-1/2">
-        <h1>Select your location</h1>
-        <SelectMap lat={lat} long={long} setLat={setLat} setLong={setLong} />
+      <div className="basis-1/3">
+        <div className="mx-auto mr-4">
+          <h1>Property Photos</h1>
+          {photos.map((entry) => (
+            <img
+              key={entry.id}
+              className="mt-4 mb-4 w-96 h-48"
+              src={`data:image/jpeg;base64,${entry.value}`}
+              alt="property"
+            />
+          ))}
+        </div>
+      </div>
+      <div className="basis-1/3">
+        <div className="mx-auto mr-4">
+          <h1>Current location</h1>
+          <SelectMap lat={lat} long={long} setLat={setLat} setLong={setLong} />
+        </div>
       </div>
     </section>
   );

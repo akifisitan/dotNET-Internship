@@ -3,6 +3,7 @@ import { getAll } from "../../services/EntityService";
 import { createProperty } from "../../services/PropertyService";
 import { useNavigate } from "react-router-dom";
 import SelectMap from "../map/SelectMap";
+import { defaultLatitude, defaultLongitude } from "../../helpers/MapData";
 
 const CreateProperty = () => {
   const navigate = useNavigate();
@@ -17,8 +18,8 @@ const CreateProperty = () => {
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [propertyStatuses, setPropertyStatuses] = useState([]);
   const [currencies, setCurrencies] = useState([]);
-  const [lat, setLat] = useState(38.925);
-  const [long, setLong] = useState(35.41);
+  const [lat, setLat] = useState(defaultLatitude);
+  const [long, setLong] = useState(defaultLongitude);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -58,7 +59,6 @@ const CreateProperty = () => {
           break;
       }
     }
-    console.log(response);
   };
 
   const validate = () => {
@@ -104,26 +104,31 @@ const CreateProperty = () => {
 
   return (
     <section className="flex flex-row">
-      <div className="basis-1/2 p-2">
-        <form onSubmit={handleSubmit} className="form-control w-full max-w-xs">
+      <div className="basis-1/2">
+        <form
+          onSubmit={handleSubmit}
+          className="form-control w-full max-w-xs mx-auto"
+        >
           <div>
-            <label className="label">Listing Start Date</label>
+            <label className="label">Listing Date Range</label>
             <input
               type="text"
               required
+              minLength={10}
+              maxLength={10}
               onChange={(e) => setStartDate(e.target.value)}
-              className="input input-bordered input-sm"
+              className="input input-bordered input-sm inline-block w-24 mr-2"
               pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
               title="dd/mm/yyyy eg. (31/12/2023)"
             />
-          </div>
-          <div>
-            <label className="label">Listing End Date</label>
+            <p className="inline-block">-</p>
             <input
               type="text"
               required
+              minLength={10}
+              maxLength={10}
               onChange={(e) => setEndDate(e.target.value)}
-              className="input input-bordered input-sm"
+              className="input input-bordered input-sm inline-block w-24 ml-2"
               pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
               title="dd/mm/yyyy eg. (31/12/2023)"
             />
@@ -217,8 +222,10 @@ const CreateProperty = () => {
         </form>
       </div>
       <div className="basis-1/2">
-        <h1>Select your location</h1>
-        <SelectMap lat={lat} long={long} setLat={setLat} setLong={setLong} />
+        <div className="mx-auto mr-4">
+          <h1>Property Location</h1>
+          <SelectMap lat={lat} long={long} setLat={setLat} setLong={setLong} />
+        </div>
       </div>
     </section>
   );

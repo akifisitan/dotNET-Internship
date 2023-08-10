@@ -54,16 +54,25 @@ const PropertyShowcase = () => {
   }, []);
 
   return (
-    <div className="p-2">
-      {!isLoading ? (
-        error ? (
-          <p>{error}</p>
+    <div>
+      <div className="p-2">
+        {!isLoading ? (
+          error ? (
+            <p>{error}</p>
+          ) : (
+            <ShowcaseTable data={data} />
+          )
         ) : (
-          <ShowcaseTable data={data} />
-        )
-      ) : (
-        <span className="loading loading-spinner loading-lg text-accent"></span>
-      )}
+          <span className="loading loading-spinner loading-lg text-accent"></span>
+        )}
+      </div>
+
+      <div className="join">
+        <button className="join-item btn">1</button>
+        <button className="join-item btn btn-active">2</button>
+        <button className="join-item btn">3</button>
+        <button className="join-item btn">4</button>
+      </div>
     </div>
   );
 };

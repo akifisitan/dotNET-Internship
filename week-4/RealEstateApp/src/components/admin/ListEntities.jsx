@@ -68,7 +68,7 @@ const ListEntities = ({ entityData }) => {
               return (
                 <div
                   key={entity.id}
-                  className="border-2 rounded-lg p-2 border-cyan-700 pl-2 m-2"
+                  className="border-2 rounded-lg p-2 border-cyan-700 pl-2 m-2 max-w-xs"
                 >
                   <p>Id: {entity.id}</p>
                   <p>Value: {entity.value}</p>

@@ -10,7 +10,7 @@ const Admin = () => {
   return (
     <div className="p-2">
       <div>
-        <h1>Admin Panel</h1>
+        <h1 className="text-lg mb-6">Admin Panel</h1>
         <label className="block mb-2 text-sm font-medium text-white">
           Select entity
         </label>

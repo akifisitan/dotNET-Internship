@@ -18,6 +18,8 @@ export async function createNewProperty(data) {
     form.append("PropertyStatusId", data.propertyStatusId);
     form.append("CurrencyId", data.currencyId);
     form.append("Price", data.price);
+    form.append("Latitude", data.latitude);
+    form.append("Longitude", data.longitude);
     for (const photo of data.photos) {
       form.append("Photos", photo);
     }
@@ -40,12 +42,15 @@ export async function updateExistingProperty(data) {
   };
   try {
     const form = new FormData();
+    form.append("Id", data.id);
     form.append("StartDate", data.startDate);
     form.append("EndDate", data.endDate);
     form.append("PropertyTypeId", data.propertyTypeId);
     form.append("PropertyStatusId", data.propertyStatusId);
     form.append("CurrencyId", data.currencyId);
     form.append("Price", data.price);
+    form.append("Latitude", data.latitude);
+    form.append("Longitude", data.longitude);
     for (const photo of data.photos) {
       form.append("Photos", photo);
     }
