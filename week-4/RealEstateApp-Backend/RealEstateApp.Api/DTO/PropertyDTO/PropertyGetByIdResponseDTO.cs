@@ -9,6 +9,8 @@ namespace RealEstateApp.Api.DTO.PropertyDTO
         public int Price { get; set; }
         public string StartDate { get; set; }
         public string EndDate { get; set; }
+        public float Latitude { get; set; }
+        public float Longitude { get; set; }
         public PropertyFieldInfoDTO<Currency> Currency { get; set; }
         public PropertyFieldInfoDTO<PropertyStatus> PropertyStatus { get; set; }
         public PropertyFieldInfoDTO<PropertyType> PropertyType { get; set; }

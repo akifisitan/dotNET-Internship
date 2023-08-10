@@ -54,14 +54,15 @@ const DetailedView = () => {
             <p>Currency: {currency}</p>
             <p>Price: {price}</p>
           </div>
-          <div>
+          <div className="carousel carousel-end rounded-box">
             {photos.map((photo) => (
-              <img
-                className="block w-64 h-48"
-                key={photo.id}
-                src={`data:image/jpeg;base64,${photo.value}`}
-                alt={photo.id}
-              />
+              <div className="carousel-item" key={photo.id}>
+                <img
+                  className="block w-64 h-48"
+                  src={`data:image/jpeg;base64,${photo.value}`}
+                  alt={photo.id}
+                />
+              </div>
             ))}
           </div>
         </div>

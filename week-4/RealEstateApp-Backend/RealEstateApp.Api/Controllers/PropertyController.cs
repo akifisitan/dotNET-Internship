@@ -31,7 +31,7 @@ namespace RealEstateApp.Api.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _context.Properties.AsNoTracking()
-                .Where(x => x.Id == id && x.Status != (int)EntityState.Deleted)
+                .Where(x => x.Id == id && x.Status != (int)EntityStatus.Deleted)
                 .Include(x => x.PropertyImages)
                 .Include(x => x.User)
                 .Include(x => x.Currency)
@@ -53,6 +53,8 @@ namespace RealEstateApp.Api.Controllers
                 Price = result.Price,
                 StartDate = result.StartDate.ToShortDateString(),
                 EndDate = result.EndDate.ToShortDateString(),
+                Latitude = result.Latitude,
+                Longitude = result.Longitude,
                 PropertyImages = images,
                 PropertyStatus = new PropertyFieldInfoDTO<PropertyStatus>(result.PropertyStatus),
                 PropertyType = new PropertyFieldInfoDTO<PropertyType>(result.PropertyType),
@@ -69,7 +71,7 @@ namespace RealEstateApp.Api.Controllers
         {
             int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var result = await _context.Properties.AsNoTracking()
-                .Where(x => x.UserId == userId && x.Status != (int)EntityState.Deleted)
+                .Where(x => x.UserId == userId && x.Status != (int)EntityStatus.Deleted)
                 .Include(x => x.PropertyImages)
                 .Include(x => x.User)
                 .Include(x => x.Currency)
@@ -95,7 +97,9 @@ namespace RealEstateApp.Api.Controllers
                     Status = property.PropertyStatus.Value,
                     Type = property.PropertyType.Value,
                     Currency = property.Currency.Value,
-                    Price = property.Price
+                    Price = property.Price,
+                    Latitude = property.Latitude,
+                    Longitude = property.Longitude
                 };
                 responseDTO.Add(dto);
             }
@@ -109,7 +113,7 @@ namespace RealEstateApp.Api.Controllers
         {
             int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var result = await _context.Properties.AsNoTracking()
-                .Where(x => x.Status != (int)EntityState.Deleted)
+                .Where(x => x.Status != (int)EntityStatus.Deleted)
                 .Include(x => x.PropertyImages)
                 .Include(x => x.User)
                 .Include(x => x.Currency)
@@ -134,7 +138,9 @@ namespace RealEstateApp.Api.Controllers
                     Status = property.PropertyStatus.Value,
                     Type = property.PropertyType.Value,
                     Currency = property.Currency.Value,
-                    Price = property.Price
+                    Price = property.Price,
+                    Latitude = property.Latitude,
+                    Longitude = property.Longitude
                 };
                 responseDTO.Add(dto);
             }
@@ -143,7 +149,7 @@ namespace RealEstateApp.Api.Controllers
 
         [Authorize(Roles = UserRoles.User)]
         [HttpPost]
-        public async Task<IActionResult> Insert([FromForm] PropertyCreateRequestDTO request)
+        public async Task<IActionResult> Create([FromForm] PropertyCreateRequestDTO request)
         {
             var response = new GenericResponse<PropertyCreateResponseDTO>();
             if (!DateTime.TryParseExact(request.StartDate, "dd/MM/yyyy",
@@ -153,7 +159,7 @@ namespace RealEstateApp.Api.Controllers
                 System.Globalization.CultureInfo.InvariantCulture,
                 System.Globalization.DateTimeStyles.None, out DateTime parsedEndDate))
             {
-                response.Message = "Please enter a valid date in MM/dd/yyyy format.";
+                response.Message = "Please enter a valid date in dd/MM/yyyy format.";
                 return BadRequest(response);
             }
             if (parsedStartDate > parsedEndDate)
@@ -166,6 +172,8 @@ namespace RealEstateApp.Api.Controllers
             {
                 StartDate = parsedStartDate,
                 EndDate = parsedEndDate,
+                Latitude = request.Latitude,
+                Longitude = request.Longitude,
                 PropertyTypeId = request.PropertyTypeId,
                 PropertyStatusId = request.PropertyStatusId,
                 CurrencyId = request.CurrencyId,
@@ -216,6 +224,8 @@ namespace RealEstateApp.Api.Controllers
                 Id = propertyId,
                 StartDate = parsedStartDate,
                 EndDate = parsedEndDate,
+                Latitude = request.Latitude,
+                Longitude = request.Longitude,
                 TypeId = request.PropertyTypeId,
                 StatusId = request.PropertyStatusId,
                 CurrencyId = request.CurrencyId,
@@ -322,6 +332,8 @@ namespace RealEstateApp.Api.Controllers
             item.Price = request.Price != null ? (int)request.Price : item.Price;
             item.StartDate = parsedStartDate;
             item.EndDate = parsedEndDate;
+            item.Latitude = request.Latitude != null ? (float)request.Latitude : item.Latitude;
+            item.Longitude = request.Longitude != null ? (float)request.Longitude : item.Longitude;
             item.PropertyTypeId = request.PropertyTypeId != null ? (int)request.PropertyTypeId : item.PropertyTypeId;
             item.PropertyTypeId = request.PropertyTypeId != null ? (int)request.PropertyTypeId : item.PropertyTypeId;
             item.PropertyStatusId = request.PropertyStatusId != null ? (int)request.PropertyStatusId : item.PropertyStatusId;
@@ -333,6 +345,8 @@ namespace RealEstateApp.Api.Controllers
                 Id = item.Id,
                 StartDate = parsedStartDate,
                 EndDate = parsedEndDate,
+                Latitude = item.Latitude,
+                Longitude = item.Longitude,
                 TypeId = item.PropertyTypeId,
                 StatusId = item.PropertyStatusId,
                 CurrencyId = item.CurrencyId,

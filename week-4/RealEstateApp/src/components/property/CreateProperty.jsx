@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getAll } from "../../services/EntityService";
 import { createProperty } from "../../services/PropertyService";
 import { useNavigate } from "react-router-dom";
+import SelectMap from "../map/SelectMap";
 
 const CreateProperty = () => {
   const navigate = useNavigate();
@@ -16,9 +17,12 @@ const CreateProperty = () => {
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [propertyStatuses, setPropertyStatuses] = useState([]);
   const [currencies, setCurrencies] = useState([]);
+  const [lat, setLat] = useState(38.925);
+  const [long, setLong] = useState(35.41);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(lat, long);
     if (!validate()) {
       setInfo("Please fill all the fields.");
       return;
@@ -31,6 +35,8 @@ const CreateProperty = () => {
       currencyId: currencyId,
       price: price,
       photos: photos,
+      latitude: lat.toFixed(2),
+      longitude: long.toFixed(2),
     };
     const response = await createProperty(data);
     if (!response) {
@@ -97,9 +103,9 @@ const CreateProperty = () => {
   }, []);
 
   return (
-    <section className="p-4">
-      <form onSubmit={handleSubmit}>
-        <div className="form-control mx-auto w-full max-w-xs text-center">
+    <section className="flex flex-row">
+      <div className="basis-1/2 p-2">
+        <form onSubmit={handleSubmit} className="form-control w-full max-w-xs">
           <div>
             <label className="label">Listing Start Date</label>
             <input
@@ -208,8 +214,12 @@ const CreateProperty = () => {
           <div>
             <p className="text-xs text-red-500">{info}</p>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
+      <div className="basis-1/2">
+        <h1>Select your location</h1>
+        <SelectMap lat={lat} long={long} setLat={setLat} setLong={setLong} />
+      </div>
     </section>
   );
 };

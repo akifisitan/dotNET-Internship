@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getAll, getById } from "../../services/EntityService";
 import { updateProperty } from "../../services/PropertyService";
 import { useNavigate, useLocation } from "react-router-dom";
+import SelectMap from "../map/SelectMap";
 
 const EditProperty = () => {
   const [startDate, setStartDate] = useState("");
@@ -15,6 +16,8 @@ const EditProperty = () => {
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [propertyStatuses, setPropertyStatuses] = useState([]);
   const [currencies, setCurrencies] = useState([]);
+  const [lat, setLat] = useState(-1);
+  const [long, setLong] = useState(-1);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,6 +35,8 @@ const EditProperty = () => {
       currencyId: currencyId,
       price: price,
       photos: photos,
+      latitude: lat.toFixed(2),
+      longitude: long.toFixed(2),
     };
     const response = await updateProperty(data);
     if (!response) {
@@ -83,12 +88,14 @@ const EditProperty = () => {
       "Property/getById",
       location.state.propertyId
     );
-    console.log("aaaa");
+    console.log("Fetch property response:");
     console.log(response);
     if (response && response.statusCode === 200) {
       setStartDate(response.data.startDate);
       setEndDate(response.data.endDate);
       setPrice(response.data.price);
+      setLat(response.data.latitude);
+      setLong(response.data.longitude);
       // do something about response.data.propertyImages
     }
   };
@@ -119,10 +126,9 @@ const EditProperty = () => {
   }, []);
 
   return (
-    <section className="p-4">
-      <h1>Edit Property</h1>
-      <form onSubmit={handleSubmit}>
-        <div className="form-control mx-auto w-full max-w-xs text-center">
+    <section className="flex flex-row">
+      <div className="basis-1/2 p-2">
+        <form onSubmit={handleSubmit} className="form-control w-full max-w-xs">
           <div>
             <label className="label">Listing Start Date</label>
             <input
@@ -234,8 +240,12 @@ const EditProperty = () => {
           <div>
             <p className="text-xs text-red-500">{info}</p>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
+      <div className="basis-1/2">
+        <h1>Select your location</h1>
+        <SelectMap lat={lat} long={long} setLat={setLat} setLong={setLong} />
+      </div>
     </section>
   );
 };

@@ -2,7 +2,7 @@ import { useState } from "react";
 import Entity from "./Entity";
 
 const Admin = () => {
-  const [category, setCategory] = useState("status");
+  const [category, setCategory] = useState("currency");
   const statusData = { name: "Property Status", path: "PropertyStatus" };
   const typeData = { name: "Property Type", path: "PropertyType" };
   const currencyData = { name: "Currency", path: "Currency" };
