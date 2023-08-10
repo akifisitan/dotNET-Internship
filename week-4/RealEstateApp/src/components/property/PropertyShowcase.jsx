@@ -9,7 +9,8 @@ const PropertyShowcase = ({ filters }) => {
     data: [],
     error: null,
   });
-  const [filteredData, setFilteredData] = useState([]);
+  const [firstRun, setFirstRun] = useState(true);
+  const [filteredData, setFilteredData] = useState(null);
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -47,14 +48,17 @@ const PropertyShowcase = ({ filters }) => {
   };
 
   useEffect(() => {
-    if (!filters) {
+    if (!filters && firstRun) {
       setState({
         error: null,
         isLoading: true,
       });
       fetchData();
+      setFirstRun(false);
     } else {
-      console.log("Filtering data...");
+      if (!filters) {
+        setFilteredData(null);
+      }
       console.log(filters);
       const newData = data.filter((item) => {
         for (const key in filters) {
@@ -65,9 +69,7 @@ const PropertyShowcase = ({ filters }) => {
         return true;
       });
       setFilteredData(newData);
-      console.log(data);
     }
-    console.log(data);
   }, [filters]);
 
   return (
@@ -77,11 +79,7 @@ const PropertyShowcase = ({ filters }) => {
           error ? (
             <p>{error}</p>
           ) : (
-            <ShowcaseTable
-              data={
-                filteredData && filteredData.length != 0 ? filteredData : data
-              }
-            />
+            <ShowcaseTable data={filteredData ? filteredData : data} />
           )
         ) : (
           <div className="w-12 mx-auto">

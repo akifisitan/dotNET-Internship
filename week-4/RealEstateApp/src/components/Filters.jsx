@@ -5,7 +5,6 @@ const Filters = ({ setFilters }) => {
   const [propertyType, setPropertyType] = useState("");
   const [propertyStatus, setPropertyStatus] = useState("");
   const [currency, setCurrency] = useState("");
-  const [price, setPrice] = useState(50000);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [propertyStatuses, setPropertyStatuses] = useState([]);
   const [currencies, setCurrencies] = useState([]);
@@ -29,11 +28,20 @@ const Filters = ({ setFilters }) => {
 
   const filterData = () => {
     const filters = {};
-    filters.price = price;
-    filters.currency = currency;
-    filters.propertyType = propertyType;
-    filters.propertyStatus = propertyStatus;
-    if (filters.price === 0) {
+    let gate = false;
+    if (currency !== "") {
+      filters.currency = currency;
+      gate = true;
+    }
+    if (propertyType !== "") {
+      filters.type = propertyType;
+      gate = true;
+    }
+    if (propertyStatus !== "") {
+      filters.status = propertyStatus;
+      gate = true;
+    }
+    if (gate === false) {
       setFilters(null);
     } else {
       setFilters(filters);
@@ -53,21 +61,6 @@ const Filters = ({ setFilters }) => {
     <div className="flex flex-row">
       <ul className="menu bg-base-200 rounded-box">
         <h2 className="text-center text-lg">Filters</h2>
-        <li>
-          <div>
-            <label className="label">Price</label>
-            <input
-              onChange={(e) => setPrice(e.target.value)}
-              type="range"
-              step={1000}
-              value={price}
-              min={0}
-              max="99999"
-              className="range range-sm"
-            />
-            {price}
-          </div>
-        </li>
         <li>
           <div>
             <label className="label">Currency</label>
