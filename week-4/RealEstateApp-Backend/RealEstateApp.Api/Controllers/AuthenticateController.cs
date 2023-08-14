@@ -21,18 +21,18 @@ namespace RealEstateApp.Api.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
-        private readonly RealEstateContext _realEstateContext;
+        private readonly RealEstateContext _context;
 
         public AuthenticateController(
             UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
             IConfiguration configuration,
-            RealEstateContext realEstateContext)
+            RealEstateContext context)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
-            _realEstateContext = realEstateContext;
+            _context = context;
         }
         [HttpPost]
         [Route("login")]
@@ -43,7 +43,7 @@ namespace RealEstateApp.Api.Controllers
             {
                 var userRoles = await _userManager.GetRolesAsync(user);
 
-                var student = await _realEstateContext.Users.SingleAsync(s => s.Email == user.Email);
+                var student = await _context.Users.SingleAsync(s => s.Email == user.Email);
 
                 var authClaims = new List<Claim>
                 {
@@ -62,7 +62,8 @@ namespace RealEstateApp.Api.Controllers
                 return Ok(new
                 {
                     token = new JwtSecurityTokenHandler().WriteToken(token),
-                    expiration = token.ValidTo
+                    expiration = token.ValidTo,
+                    roles = userRoles
                 });
             }
             return Unauthorized();
@@ -72,9 +73,17 @@ namespace RealEstateApp.Api.Controllers
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequestDTO model)
         {
+            if (model.Username == null || model.Email == null || model.Password == null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            model.Username = model.Username.Trim();
+            model.Email = model.Email.Trim();
+            model.Password = model.Password.Trim();
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User already exists!" });
+
+            if (model.Username == null || model.Email == null || model.Password == null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
             IdentityUser user = new()
             {
@@ -88,14 +97,14 @@ namespace RealEstateApp.Api.Controllers
 
             await _userManager.AddToRoleAsync(user, UserRoles.User);
 
-            User newUser = new User()
+            User newUser = new()
             {
                 Name = user.UserName,
                 Email = user.Email,
                 Username = user.UserName
             };
-            _realEstateContext.Users.Add(newUser);
-            await _realEstateContext.SaveChangesAsync();
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
 
             return Ok(new ResponseDTO { Status = "Success", Message = "User created successfully!" });
         }
@@ -104,6 +113,11 @@ namespace RealEstateApp.Api.Controllers
         [Route("register-admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterRequestDTO model)
         {
+            if (model.Username == null || model.Email == null || model.Password == null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+            model.Username = model.Username.Trim();
+            model.Email = model.Email.Trim();
+            model.Password = model.Password.Trim();
             var userExists = await _userManager.FindByNameAsync(model.Username);
             if (userExists != null)
                 return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User already exists!" });
@@ -131,30 +145,74 @@ namespace RealEstateApp.Api.Controllers
             {
                 await _userManager.AddToRoleAsync(user, UserRoles.User);
             }
-            User newUser = new User()
+            User newUser = new()
             {
                 Name = user.UserName,
                 Email = user.Email,
                 Username = user.UserName
             };
-            _realEstateContext.Users.Add(newUser);
-            await _realEstateContext.SaveChangesAsync();
+            _context.Users.Add(newUser);
+            await _context.SaveChangesAsync();
 
             return Ok(new ResponseDTO { Status = "Success", Message = "User created successfully!" });
         }
 
+        [HttpPost]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("create-role")]
+        public async Task<IActionResult> CreateRole([FromBody] string roleName)
+        {
+            roleName = roleName.Trim();
+            if (await _roleManager.RoleExistsAsync(roleName))
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "Role already exists!" });
+            }
+            await _roleManager.CreateAsync(new IdentityRole(roleName));
+            return Ok(new ResponseDTO { Status = "Success", Message = "Role created successfully!" });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("delete-role")]
+        public async Task<IActionResult> DeleteRole([FromBody] string roleName)
+        {
+            roleName = roleName.Trim();
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "Role does not exist!" });
+            }
+            await _roleManager.DeleteAsync(new IdentityRole(roleName));
+            return Ok(new ResponseDTO { Status = "Success", Message = "Role deleted successfully!" });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = UserRoles.Admin)]
+        [Route("assign-role")]
+        public async Task<IActionResult> AssignRole([FromBody] string username, string roleName)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "User does not exist!" });
+            roleName = roleName.Trim();
+            if (await _roleManager.RoleExistsAsync(roleName))
+            {
+                await _userManager.AddToRoleAsync(user, roleName);
+                return Ok(new ResponseDTO { Status = "Success", Message = "Role assigned successfully!" });
+            }
+            return StatusCode(StatusCodes.Status500InternalServerError, new ResponseDTO { Status = "Error", Message = "Role does not exist!" });
+        }
+
         private JwtSecurityToken GetToken(List<Claim> authClaims)
         {
-            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JWT:Secret"]));
-
+            var secKey = _configuration["JWT:Secret"] ?? throw new Exception("Secret key is null");
+            var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secKey));
             var token = new JwtSecurityToken(
                 issuer: _configuration["JWT:ValidIssuer"],
                 audience: _configuration["JWT:ValidAudience"],
                 expires: DateTime.Now.AddHours(3),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
-                );
-
+            );
             return token;
         }
     }

@@ -53,7 +53,6 @@ namespace RealEstateApp.Api.Controllers
             }
             var item = _set.Add(new PropertyStatus(request.Value));
             await _context.SaveChangesAsync();
-
             return Ok(new PropertyFieldInfoDTO<PropertyStatus>(item.Entity));
         }
 

@@ -20,8 +20,8 @@ ConfigurationManager configuration = builder.Configuration;
 builder.Services.AddDbContext<RealEstateContext>(options => options.UseSqlServer(configuration.GetConnectionString("RealEstate")));
 
 // Use In Memory
-//builder.Services.AddDbContext<LibraryContext>(options =>
-//                    options.UseInMemoryDatabase(databaseName: "LibraryContext"));
+//builder.Services.AddDbContext<RealEstateContext>(options =>
+//                    options.UseInMemoryDatabase(databaseName: "RealEstateContext"));
 
 #endregion
 
@@ -71,7 +71,7 @@ builder.Services.AddSwaggerGen(swagger =>
     swagger.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "Library API",
+        Title = "Real Estate API",
         Description = "ASP.NET Core 6 Web API"
     });
     // To Enable authorization using Swagger (JWT)  
@@ -95,7 +95,7 @@ builder.Services.AddSwaggerGen(swagger =>
                                     Id = "Bearer"
                                 }
                             },
-                            new string[] {}
+                            Array.Empty<string>()
 
                     }
                 });
