@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { getAll, getById, deleteEntity } from "../../../services/EntityService";
 import { updateProperty } from "../../../services/PropertyService";
 import { useNavigate, useLocation } from "react-router-dom";
-import SelectMap from "../../map/SelectMap";
+import { SelectMap } from "../../map/SelectMap";
 import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
 
-const EditProperty = () => {
+export const EditProperty = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [propertyTypeId, setPropertyTypeId] = useState(-1);
@@ -308,5 +308,3 @@ const EditProperty = () => {
     </section>
   );
 };
-
-export default EditProperty;

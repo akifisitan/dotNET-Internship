@@ -2,10 +2,10 @@ import { useState, useEffect } from "react";
 import { getAll } from "../../../services/EntityService";
 import { createProperty } from "../../../services/PropertyService";
 import { useNavigate } from "react-router-dom";
-import SelectMap from "../../map/SelectMap";
+import { SelectMap } from "../../map/SelectMap";
 import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
 
-const CreateProperty = () => {
+export const CreateProperty = () => {
   const navigate = useNavigate();
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -230,5 +230,3 @@ const CreateProperty = () => {
     </section>
   );
 };
-
-export default CreateProperty;

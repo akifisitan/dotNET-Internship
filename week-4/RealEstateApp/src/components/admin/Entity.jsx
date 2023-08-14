@@ -1,10 +1,10 @@
 import { useState } from "react";
-import ListEntities from "./ListEntities";
-import CreateEntity from "./CreateEntity";
-import UpdateEntity from "./UpdateEntity";
-import DeleteEntity from "./DeleteEntity";
+import { ListEntities } from "./ListEntities";
+import { CreateEntity } from "./CreateEntity";
+import { UpdateEntity } from "./UpdateEntity";
+import { DeleteEntity } from "./DeleteEntity";
 
-const Entity = ({ entityData }) => {
+export const Entity = ({ entityData }) => {
   const [operation, setOperation] = useState("list");
 
   return (
@@ -43,5 +43,3 @@ const Entity = ({ entityData }) => {
     </section>
   );
 };
-
-export default Entity;

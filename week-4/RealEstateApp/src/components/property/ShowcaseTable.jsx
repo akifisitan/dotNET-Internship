@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const ShowcaseTable = ({ data }) => {
+export const ShowcaseTable = ({ data }) => {
   const rowLength = 6;
   const numRows = Math.ceil(data.length / rowLength);
   const navigate = useNavigate();
@@ -39,5 +39,3 @@ const ShowcaseTable = ({ data }) => {
     </table>
   );
 };
-
-export default ShowcaseTable;

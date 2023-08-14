@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getAll } from "../services/EntityService";
 
-const Filters = ({ setFilters }) => {
+export const Filters = ({ setFilters }) => {
   const [propertyType, setPropertyType] = useState("");
   const [propertyStatus, setPropertyStatus] = useState("");
   const [currency, setCurrency] = useState("");
@@ -132,5 +132,3 @@ const Filters = ({ setFilters }) => {
     </div>
   );
 };
-
-export default Filters;

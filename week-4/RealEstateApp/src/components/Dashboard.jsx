@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import ListProperties from "./property/user/ListProperties";
-import Analytics from "./Analytics";
+import { ListProperties } from "./property/user/ListProperties";
+import { Analytics } from "./Analytics";
 
-const Dashboard = () => {
+export const Dashboard = () => {
   const navigate = useNavigate();
   return (
     <div>
@@ -24,5 +24,3 @@ const Dashboard = () => {
     </div>
   );
 };
-
-export default Dashboard;

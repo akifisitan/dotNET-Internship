@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { getAll } from "../../services/EntityService";
 import { useNavigate } from "react-router-dom";
 
-const ListEntities = ({ entityData }) => {
+export const ListEntities = ({ entityData }) => {
   const [{ isLoading, data, error }, setState] = useState({
     isLoading: false,
     data: [],
@@ -83,5 +83,3 @@ const ListEntities = ({ entityData }) => {
     </section>
   );
 };
-
-export default ListEntities;

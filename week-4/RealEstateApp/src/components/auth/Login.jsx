@@ -1,17 +1,15 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../services/AuthService";
 import { storeToken } from "../../helpers/Auth";
 import { authContext } from "../../context/authContext";
 
-const Login = () => {
+export const Login = () => {
   const [username, setUserName] = useState();
   const [password, setPassword] = useState();
   const [infoMessage, setInfo] = useState(null);
   const navigate = useNavigate();
   const { authenticated, setAuthenticated } = useContext(authContext);
-
-  if (authenticated) navigate("/");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -42,6 +40,10 @@ const Login = () => {
       setInfo(null);
     }, 3000);
   };
+
+  useEffect(() => {
+    if (authenticated) navigate("/");
+  }, [authenticated, navigate]);
 
   return (
     <section className="mt-8">
@@ -105,5 +107,3 @@ const Login = () => {
     </section>
   );
 };
-
-export default Login;

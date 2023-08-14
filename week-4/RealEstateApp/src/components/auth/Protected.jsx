@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { isTokenExpired } from "../../helpers/Auth";
 import { authContext } from "../../context/authContext";
 
-const Protected = ({ children }) => {
+export const Protected = ({ children }) => {
   const { authenticated, setAuthenticated } = useContext(authContext);
   if (!authenticated || isTokenExpired()) {
     setAuthenticated(false);
@@ -11,5 +11,3 @@ const Protected = ({ children }) => {
   }
   return children;
 };
-
-export default Protected;

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef } from "react";
 import "leaflet/dist/leaflet.css";
 import { MapContainer, Marker, useMap, TileLayer } from "react-leaflet";
 
-const SelectMap = ({ lat, long, setLat, setLong }) => {
+export const SelectMap = ({ lat, long, setLat, setLong }) => {
   function SetViewOnClick({ coords }) {
     const map = useMap();
     map.setView(coords, map.getZoom());
@@ -59,5 +59,3 @@ const SelectMap = ({ lat, long, setLat, setLong }) => {
     </MapContainer>
   );
 };
-
-export default SelectMap;

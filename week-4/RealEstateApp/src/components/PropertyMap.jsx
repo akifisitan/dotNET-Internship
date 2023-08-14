@@ -1,11 +1,11 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { Marker, Popup } from "react-leaflet";
-import DetailMap from "./map/DetailMap";
+import { DetailMap } from "./map/DetailMap";
 import { defaultLatitude, defaultLongitude } from "../helpers/MapData";
 import { getAllProperties } from "../services/PropertyService";
 
-const PropertyMap = () => {
+export const PropertyMap = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState([]);
   const navigate = useNavigate();
@@ -57,5 +57,3 @@ const PropertyMap = () => {
     </div>
   );
 };
-
-export default PropertyMap;

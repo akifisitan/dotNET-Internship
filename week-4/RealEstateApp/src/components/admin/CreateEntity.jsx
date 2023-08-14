@@ -2,7 +2,7 @@ import { useState } from "react";
 import { insertEntity } from "../../services/EntityService";
 import { useNavigate } from "react-router-dom";
 
-const CreateEntity = ({ entityData }) => {
+export const CreateEntity = ({ entityData }) => {
   const [data, setData] = useState();
   const [infoMessage, setInfo] = useState(null);
   const navigate = useNavigate();
@@ -75,5 +75,3 @@ const CreateEntity = ({ entityData }) => {
     </section>
   );
 };
-
-export default CreateEntity;

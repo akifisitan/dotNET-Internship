@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { getAllProperties } from "../../services/PropertyService";
-import ShowcaseTable from "./ShowcaseTable";
+import { ShowcaseTable } from "./ShowcaseTable";
 import { useNavigate } from "react-router-dom";
 
-const PropertyShowcase = ({ filters }) => {
+export const PropertyShowcase = ({ filters }) => {
   const [{ isLoading, data, error }, setState] = useState({
     isLoading: false,
     data: [],
@@ -90,5 +90,3 @@ const PropertyShowcase = ({ filters }) => {
     </div>
   );
 };
-
-export default PropertyShowcase;

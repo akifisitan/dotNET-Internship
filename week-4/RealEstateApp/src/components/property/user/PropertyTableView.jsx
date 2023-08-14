@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-const PropertyTableView = ({ data }) => {
+export const PropertyTableView = ({ data }) => {
   const rowLength = 8;
   const numRows = Math.ceil(data.length / rowLength);
   const navigate = useNavigate();
@@ -39,5 +39,3 @@ const PropertyTableView = ({ data }) => {
     </table>
   );
 };
-
-export default PropertyTableView;

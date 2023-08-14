@@ -2,7 +2,7 @@ import { useState } from "react";
 import { authContext } from "../context/authContext";
 import { isLoggedIn } from "../helpers/Auth";
 
-const Authenticate = ({ children }) => {
+export const Authenticate = ({ children }) => {
   const [authenticated, setAuthenticated] = useState(isLoggedIn());
 
   return (
@@ -13,5 +13,3 @@ const Authenticate = ({ children }) => {
     </div>
   );
 };
-
-export default Authenticate;

@@ -1,7 +1,7 @@
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer } from "react-leaflet";
 
-const DetailMap = ({ lat, long, size, children }) => {
+export const DetailMap = ({ lat, long, size, children }) => {
   return (
     <MapContainer
       center={[lat, long]}
@@ -23,5 +23,3 @@ const DetailMap = ({ lat, long, size, children }) => {
     </MapContainer>
   );
 };
-
-export default DetailMap;

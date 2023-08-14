@@ -1,18 +1,18 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Login from "./auth/Login";
-import Signup from "./auth/Signup";
-import Logout from "./auth/Logout";
-import Protected from "./auth/Protected";
-import Admin from "./admin/Admin";
-import Home from "./Home";
-import Navbar from "./Navbar";
-import Dashboard from "./Dashboard";
-import CreateProperty from "./property/user/CreateProperty";
-import EditProperty from "./property/user/EditProperty";
-import DetailedView from "./property/DetailedView";
-import PropertyMap from "./PropertyMap";
+import { Login } from "./auth/Login";
+import { Signup } from "./auth/Signup";
+import { Logout } from "./auth/Logout";
+import { Protected } from "./auth/Protected";
+import { Admin } from "./admin/Admin";
+import { Home } from "./Home";
+import { Navbar } from "./Navbar";
+import { Dashboard } from "./Dashboard";
+import { CreateProperty } from "./property/user/CreateProperty";
+import { EditProperty } from "./property/user/EditProperty";
+import { DetailedView } from "./property/DetailedView";
+import { PropertyMap } from "./PropertyMap";
 
-const App = () => {
+export const App = () => {
   return (
     <div>
       <BrowserRouter>
@@ -82,5 +82,3 @@ const App = () => {
     </div>
   );
 };
-
-export default App;

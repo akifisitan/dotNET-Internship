@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { clearToken } from "../../helpers/Auth";
 import { authContext } from "../../context/authContext";
 
-const Logout = () => {
+export const Logout = () => {
   const navigate = useNavigate();
   const { setAuthenticated } = useContext(authContext);
 
@@ -25,5 +25,3 @@ const Logout = () => {
     </section>
   );
 };
-
-export default Logout;

@@ -1,12 +1,12 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getById } from "../../services/EntityService";
-import DetailMap from "../map/DetailMap";
+import { DetailMap } from "../map/DetailMap";
 import { defaultLatitude, defaultLongitude } from "../../helpers/MapData";
 import { getAllProperties } from "../../services/PropertyService";
 import { Marker, Popup } from "react-leaflet";
 
-const DetailedView = () => {
+export const DetailedView = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [propertyType, setPropertyType] = useState(-1);
@@ -91,5 +91,3 @@ const DetailedView = () => {
     </div>
   );
 };
-
-export default DetailedView;

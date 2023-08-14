@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { getAllPropertiesByUser } from "../../../services/PropertyService";
-import PropertyTableView from "./PropertyTableView";
+import { PropertyTableView } from "./PropertyTableView";
 import { useNavigate } from "react-router-dom";
 
-const ListProperties = () => {
+export const ListProperties = () => {
   const [{ isLoading, data, error }, setState] = useState({
     isLoading: false,
     data: [],
@@ -74,5 +74,3 @@ const ListProperties = () => {
     </div>
   );
 };
-
-export default ListProperties;

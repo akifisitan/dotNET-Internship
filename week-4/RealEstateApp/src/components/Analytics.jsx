@@ -2,7 +2,7 @@ import { Chart } from "react-google-charts";
 import { useState, useEffect } from "react";
 import { getAnalyticsByUserId } from "../services/PropertyService";
 
-const Analytics = () => {
+export const Analytics = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [analytics, setAnalytics] = useState(null);
 
@@ -61,5 +61,3 @@ const Analytics = () => {
     </div>
   );
 };
-
-export default Analytics;

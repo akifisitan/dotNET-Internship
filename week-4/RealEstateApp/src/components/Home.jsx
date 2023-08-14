@@ -1,10 +1,9 @@
-import PropertyShowcase from "./property/PropertyShowcase";
-import Filters from "./Filters";
+import { PropertyShowcase } from "./property/PropertyShowcase";
+import { Filters } from "./Filters";
 import { useState } from "react";
 
-const Home = () => {
+export const Home = () => {
   const [filters, setFilters] = useState();
-  console.log("home re-rendered");
   return (
     <div className="p-2">
       <h1 className="text-2xl p-1">Home Page</h1>
@@ -19,5 +18,3 @@ const Home = () => {
     </div>
   );
 };
-
-export default Home;

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { deleteEntity } from "../../services/EntityService";
 import { useNavigate } from "react-router-dom";
 
-const DeleteEntity = ({ entityData }) => {
+export const DeleteEntity = ({ entityData }) => {
   const [dataId, setDataId] = useState();
   const [info, setInfo] = useState(null);
   const [outcome, setOutcome] = useState("error");
@@ -91,5 +91,3 @@ const DeleteEntity = ({ entityData }) => {
     </section>
   );
 };
-
-export default DeleteEntity;

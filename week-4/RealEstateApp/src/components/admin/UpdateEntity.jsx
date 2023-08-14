@@ -2,7 +2,7 @@ import { useState } from "react";
 import { updateEntity } from "../../services/EntityService";
 import { useNavigate } from "react-router-dom";
 
-const UpdateEntity = ({ entityData }) => {
+export const UpdateEntity = ({ entityData }) => {
   const [data, setData] = useState();
   const [dataId, setDataId] = useState();
   const [infoMessage, setInfo] = useState(null);
@@ -95,5 +95,3 @@ const UpdateEntity = ({ entityData }) => {
     </section>
   );
 };
-
-export default UpdateEntity;

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import Entity from "./Entity";
+import { Entity } from "./Entity";
 
-const Admin = () => {
+export const Admin = () => {
   const [category, setCategory] = useState("currency");
   const statusData = { name: "Property Status", path: "PropertyStatus" };
   const typeData = { name: "Property Type", path: "PropertyType" };
@@ -39,5 +39,3 @@ const Admin = () => {
     </div>
   );
 };
-
-export default Admin;
