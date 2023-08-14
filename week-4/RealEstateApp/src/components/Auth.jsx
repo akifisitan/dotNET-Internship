@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { authContext } from "../context/authContext";
-import { isLoggedIn } from "../helpers/Auth";
+import { getUserData } from "../helpers/Auth";
 
 export const Authenticate = ({ children }) => {
-  const [authenticated, setAuthenticated] = useState(isLoggedIn());
+  const [userInfo, setUserInfo] = useState(getUserData());
 
   return (
     <div>
-      <authContext.Provider value={{ authenticated, setAuthenticated }}>
+      <authContext.Provider value={{ userInfo, setUserInfo }}>
         {children}
       </authContext.Provider>
     </div>

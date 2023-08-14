@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getAll } from "../services/EntityService";
 
 export const Filters = ({ setFilters }) => {
+  // const
   const [propertyType, setPropertyType] = useState("");
   const [propertyStatus, setPropertyStatus] = useState("");
   const [currency, setCurrency] = useState("");
@@ -61,6 +62,19 @@ export const Filters = ({ setFilters }) => {
     <div className="flex flex-row">
       <ul className="menu bg-base-200 rounded-box">
         <h2 className="text-center text-lg">Filters</h2>
+        <li>
+          <div>
+            <label>Min</label>
+            <input type="range" min={0} max="100" className="range range-sm" />
+          </div>
+        </li>
+        <li>
+          <div>
+            <label>Max</label>
+            <input type="range" min={0} max="100" className=" range range-sm" />
+            0000000
+          </div>
+        </li>
         <li>
           <div>
             <label className="label">Currency</label>

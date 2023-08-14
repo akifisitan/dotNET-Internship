@@ -1,28 +1,38 @@
 import { useState, useContext, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { login } from "../../services/AuthService";
-import { storeToken } from "../../helpers/Auth";
+import { storeUserData } from "../../helpers/Auth";
 import { authContext } from "../../context/authContext";
 
 export const Login = () => {
-  const [username, setUserName] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUserName] = useState("");
+  const [password, setPassword] = useState("");
   const [infoMessage, setInfo] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { authenticated, setAuthenticated } = useContext(authContext);
+  const { userInfo, setUserInfo } = useContext(authContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const response = await login(username, password);
     if (!response) {
       setInfo("Something went wrong. Please try again");
     } else {
-      const status = response.status;
-      switch (status) {
+      const statusCode = response.statusCode;
+      switch (statusCode) {
         case 200: {
-          setAuthenticated(true);
-          storeToken(response.data.token, response.data.expiration);
-          navigate("/");
+          storeUserData(
+            username,
+            response.data.roles,
+            response.data.token,
+            response.data.expiration
+          );
+          setUserInfo({
+            username: username,
+            roles: response.data.roles,
+          });
+          navigate("/", { replace: true });
           break;
         }
         case 400:
@@ -32,21 +42,24 @@ export const Login = () => {
           setInfo("Invalid username or password");
           break;
         default:
-          setInfo("Something went wrong. Please try again");
+          setInfo(
+            `An unexpected error ocurred. Please try again later. Status code: ${statusCode}`
+          );
           break;
       }
     }
+    setLoading(false);
     setTimeout(() => {
       setInfo(null);
     }, 3000);
   };
 
   useEffect(() => {
-    if (authenticated) navigate("/");
-  }, [authenticated, navigate]);
+    if (userInfo) navigate("/");
+  }, [userInfo, navigate]);
 
   return (
-    <section className="mt-8">
+    <section className="h-screen flex items-center justify-center">
       <div className="container mx-auto w-full bg-gray-800 rounded-lg shadow border border-gray-400 md:mt-0 sm:max-w-md xl:p-0 ">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl ">
@@ -83,9 +96,10 @@ export const Login = () => {
             </div>
             <button
               type="submit"
+              disabled={loading}
               className="bg-blue-600 hover:bg-blue-700 focus:ring-blue-800 w-full text-gray-100  focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center"
             >
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
             <p className="text-sm font-light text-gray-400">
               Don’t have an account yet?{" "}
@@ -97,9 +111,15 @@ export const Login = () => {
               </Link>
             </p>
             <div>
-              <p className="text-center text-red-700">
-                {infoMessage !== null ? infoMessage : null}
-              </p>
+              {loading ? (
+                <div className="w-12 mx-auto">
+                  <span className="loading loading-spinner loading-lg text-accent"></span>
+                </div>
+              ) : (
+                <p className="text-center text-red-700">
+                  {infoMessage !== null ? infoMessage : null}
+                </p>
+              )}
             </div>
           </form>
         </div>

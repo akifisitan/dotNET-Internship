@@ -7,7 +7,7 @@ export async function login(username, password) {
   };
   const response = await Post("api/Authenticate/login", body);
   if (response) {
-    return { data: response.data, status: response.status };
+    return { data: response.data, statusCode: response.status };
   }
   return null;
 }
@@ -20,7 +20,7 @@ export async function signup(email, password, username) {
   };
   const response = await Post("api/Authenticate/register", body);
   if (response) {
-    return { data: response.data, status: response.status };
+    return { data: response.data, statusCode: response.status };
   }
   return null;
 }

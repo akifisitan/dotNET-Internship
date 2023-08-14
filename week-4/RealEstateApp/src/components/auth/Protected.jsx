@@ -4,9 +4,9 @@ import { isTokenExpired } from "../../helpers/Auth";
 import { authContext } from "../../context/authContext";
 
 export const Protected = ({ children }) => {
-  const { authenticated, setAuthenticated } = useContext(authContext);
-  if (!authenticated || isTokenExpired()) {
-    setAuthenticated(false);
+  const { userInfo, setUserInfo } = useContext(authContext);
+  if (!userInfo || isTokenExpired()) {
+    setUserInfo(null);
     return <Navigate to="/login" replace />;
   }
   return children;

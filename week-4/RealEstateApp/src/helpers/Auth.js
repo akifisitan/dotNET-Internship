@@ -2,25 +2,33 @@ export function getAccessToken() {
   return localStorage.getItem("accessToken");
 }
 
-export function storeToken(token, expiration) {
+export function storeUserData(username, roles, token, expiration) {
+  localStorage.setItem("username", username);
+  localStorage.setItem("roles", JSON.stringify(roles));
   localStorage.setItem("accessToken", token);
   localStorage.setItem("tokenExpiration", expiration);
 }
 
-export function clearToken() {
+export function clearUserData() {
+  localStorage.removeItem("username");
+  localStorage.removeItem("roles");
   localStorage.removeItem("accessToken");
   localStorage.removeItem("tokenExpiration");
 }
 
-export function isLoggedIn() {
-  return getAccessToken() !== null;
+export function getUserData() {
+  const username = localStorage.getItem("username");
+  const roles = localStorage.getItem("roles");
+  return username && roles
+    ? { username: username, roles: JSON.parse(roles) }
+    : null;
 }
 
 export function isTokenExpired() {
   const expiration = localStorage.getItem("tokenExpiration");
   if (Date.parse(expiration) < Date.now()) {
     console.log("Token has expired");
-    clearToken();
+    clearUserData();
     return true;
   }
   // const remainingTime = Date.parse(expiration) - Date.now();

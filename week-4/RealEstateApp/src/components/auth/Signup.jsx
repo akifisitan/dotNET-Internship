@@ -15,8 +15,8 @@ export const Signup = () => {
     if (!response) {
       setInfo("Something went wrong. Please try again");
     } else {
-      const status = response.status;
-      switch (status) {
+      const statusCode = response.statusCode;
+      switch (statusCode) {
         case 200:
           navigate("/login");
           break;
@@ -28,7 +28,7 @@ export const Signup = () => {
   };
 
   return (
-    <section className="mt-8">
+    <section className="h-screen flex items-center justify-center">
       <div className="container mx-auto w-full bg-gray-800 rounded-lg shadow border border-gray-400 md:mt-0 sm:max-w-md xl:p-0 ">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-white md:text-2xl ">

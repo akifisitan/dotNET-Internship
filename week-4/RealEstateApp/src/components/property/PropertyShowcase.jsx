@@ -58,17 +58,18 @@ export const PropertyShowcase = ({ filters }) => {
     } else {
       if (!filters) {
         setFilteredData(null);
-      }
-      console.log(filters);
-      const newData = data.filter((item) => {
-        for (const key in filters) {
-          if (filters[key] && item[key] !== filters[key]) {
-            return false;
+      } else {
+        console.log(filters);
+        const newData = data.filter((item) => {
+          for (const key in filters) {
+            if (filters[key] && item[key] !== filters[key]) {
+              return false;
+            }
           }
-        }
-        return true;
-      });
-      setFilteredData(newData);
+          return true;
+        });
+        setFilteredData(newData);
+      }
     }
   }, [filters]);
 
