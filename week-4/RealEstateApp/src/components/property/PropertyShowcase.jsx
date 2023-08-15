@@ -76,16 +76,14 @@ export const PropertyShowcase = ({ filters }) => {
   return (
     <div>
       <div className="flex p-2">
-        {!isLoading ? (
-          error ? (
-            <p>{error}</p>
-          ) : (
-            <ShowcaseTable data={filteredData ? filteredData : data} />
-          )
-        ) : (
+        {isLoading ? (
           <div className="w-12 mx-auto">
             <span className="loading loading-spinner loading-lg text-accent"></span>
           </div>
+        ) : error ? (
+          <p>{error}</p>
+        ) : (
+          <ShowcaseTable data={filteredData ? filteredData : data} />
         )}
       </div>
     </div>

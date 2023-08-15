@@ -4,8 +4,6 @@ import { authContext } from "../context/authContext";
 
 export const Navbar = () => {
   const { userInfo } = useContext(authContext);
-  console.log("Navbar re-rendered.");
-  console.log(userInfo);
   if (!userInfo) return null;
   return (
     <nav className="navbar bg-base-100">
