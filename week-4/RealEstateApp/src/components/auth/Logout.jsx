@@ -1,27 +1,36 @@
 import { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { clearUserData } from "../../helpers/Auth";
 import { authContext } from "../../context/authContext";
+import { clearUserData } from "../../helpers/Auth";
 
 export const Logout = () => {
   const navigate = useNavigate();
-  const { setUserInfo } = useContext(authContext);
+  const { userInfo, setUserInfo } = useContext(authContext);
 
   useEffect(() => {
-    clearUserData();
-    setUserInfo(null);
-    const timeoutId = setTimeout(() => {
-      navigate("/login");
-    }, 3000);
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [navigate, setUserInfo]);
+    if (!userInfo) {
+      navigate("/login", { replace: true });
+    } else {
+      clearUserData();
+      setUserInfo(null);
+      const timeoutId = setTimeout(() => {
+        navigate("/login", { replace: true });
+      }, 3000);
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, []);
 
   return (
-    <section className="flex flex-col items-center justify-center text-2xl">
-      <p>You have been logged out.</p>
-      <p>You will be redirected to the login page in 3 seconds.</p>
+    <section className="h-screen flex items-center justify-center">
+      <div className="text-2xl text-center">
+        <p>
+          You have been logged out
+          <br />
+          You will be redirected to the login page in 3 seconds
+        </p>
+      </div>
     </section>
   );
 };
