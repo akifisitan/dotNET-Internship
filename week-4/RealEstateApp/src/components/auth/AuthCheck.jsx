@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { authContext } from "../context/authContext";
-import { getUserData } from "../helpers/Auth";
+import { authContext } from "../../context/authContext";
+import { getUserData } from "../../helpers/Auth";
 
-export const Authenticate = ({ children }) => {
+export const AuthCheck = ({ children }) => {
   const [userInfo, setUserInfo] = useState(getUserData());
 
   return (

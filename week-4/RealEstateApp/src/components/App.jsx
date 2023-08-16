@@ -1,11 +1,11 @@
-import { Authenticate } from "./Auth.jsx";
+import { AuthCheck } from "./auth/AuthCheck.jsx";
 import { Pages } from "./Pages.jsx";
 
 export const App = () => {
   console.log("App re-rendered.");
   return (
-    <Authenticate>
+    <AuthCheck>
       <Pages />
-    </Authenticate>
+    </AuthCheck>
   );
 };

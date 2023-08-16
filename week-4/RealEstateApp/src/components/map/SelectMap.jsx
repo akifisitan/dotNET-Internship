@@ -20,8 +20,6 @@ export const SelectMap = ({ lat, long, setLat, setLong }) => {
       dragend() {
         const marker = markerRef.current;
         if (marker != null) {
-          // console.log(marker.getLatLng());
-          // console.log(y, x);
           const { lat, lng } = marker.getLatLng();
           setLat(lat);
           setLong(lng);

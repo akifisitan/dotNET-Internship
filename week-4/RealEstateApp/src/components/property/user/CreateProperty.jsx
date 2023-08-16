@@ -4,33 +4,42 @@ import { createProperty } from "../../../services/PropertyService";
 import { useNavigate } from "react-router-dom";
 import { SelectMap } from "../../map/SelectMap";
 import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
+import { format } from "date-fns";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 
 export const CreateProperty = () => {
   const navigate = useNavigate();
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [info, setInfo] = useState(null);
   const [propertyTypeId, setPropertyTypeId] = useState(-1);
   const [propertyStatusId, setPropertyStatusId] = useState(-1);
   const [currencyId, setCurrencyId] = useState(-1);
   const [price, setPrice] = useState(-1);
+  const [endDate, setEndDate] = useState(new Date());
   const [photos, setPhotos] = useState([]);
-  const [info, setInfo] = useState(null);
+  const [lat, setLat] = useState(defaultLatitude);
+  const [long, setLong] = useState(defaultLongitude);
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [propertyStatuses, setPropertyStatuses] = useState([]);
   const [currencies, setCurrencies] = useState([]);
-  const [lat, setLat] = useState(defaultLatitude);
-  const [long, setLong] = useState(defaultLongitude);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(lat, long);
+    setLoading(true);
     if (!validate()) {
       setInfo("Please fill all the fields.");
+      setLoading(false);
+      return;
+    }
+    if (!checkDate(endDate)) {
+      setInfo("Please select a date in the future.");
+      setLoading(false);
       return;
     }
     const data = {
-      startDate: startDate,
-      endDate: endDate,
+      startDate: format(new Date(), "dd/MM/yyyy"),
+      endDate: format(endDate, "dd/MM/yyyy"),
       propertyTypeId: propertyTypeId,
       propertyStatusId: propertyStatusId,
       currencyId: currencyId,
@@ -63,8 +72,6 @@ export const CreateProperty = () => {
 
   const validate = () => {
     if (
-      startDate === "" ||
-      endDate === "" ||
       propertyTypeId === -1 ||
       propertyStatusId === -1 ||
       currencyId === -1 ||
@@ -93,6 +100,16 @@ export const CreateProperty = () => {
       setPropertyTypes(response.data);
   };
 
+  const checkDate = (date) => {
+    const today = new Date();
+    if (date < today) {
+      setInfo("Please select a date in the future.");
+      return false;
+    }
+    setInfo(null);
+    return true;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       await fetchCurrencies();
@@ -107,39 +124,14 @@ export const CreateProperty = () => {
       <div className="basis-1/2">
         <form
           onSubmit={handleSubmit}
-          className="form-control w-full max-w-xs mx-auto"
+          className="form-control w-full max-w-xs mx-auto pb-8"
         >
-          <div>
-            <label className="label">Listing Date Range</label>
-            <input
-              type="text"
-              required
-              minLength={10}
-              maxLength={10}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="input input-bordered input-sm inline-block w-24 mr-2"
-              pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
-              title="dd/mm/yyyy eg. (31/12/2023)"
-            />
-            <p className="inline-block">-</p>
-            <input
-              type="text"
-              required
-              minLength={10}
-              maxLength={10}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="input input-bordered input-sm inline-block w-24 ml-2"
-              pattern="^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$"
-              title="dd/mm/yyyy eg. (31/12/2023)"
-            />
-          </div>
           <div>
             <label className="label">Property Type</label>
             <select
               defaultValue="Select a property type"
               className="select select-bordered select-sm w-full max-w-xs"
               onChange={(e) => {
-                console.log(`Chosen property type id: ${e.target.value}`);
                 setPropertyTypeId(e.target.value);
               }}
             >
@@ -157,7 +149,6 @@ export const CreateProperty = () => {
               defaultValue="Select a property status"
               className="select select-bordered select-sm w-full max-w-xs"
               onChange={(e) => {
-                console.log(`Chosen property status id: ${e.target.value}`);
                 setPropertyStatusId(e.target.value);
               }}
             >
@@ -175,7 +166,6 @@ export const CreateProperty = () => {
               defaultValue="Select a currency"
               className="select select-bordered select-sm w-full max-w-xs"
               onChange={(e) => {
-                console.log(`Chosen currency id: ${e.target.value}`);
                 setCurrencyId(e.target.value);
               }}
             >
@@ -200,21 +190,36 @@ export const CreateProperty = () => {
             />
           </div>
           <div>
+            <label className="label">Listing Expiry Date</label>
+            <DayPicker
+              className="m-0"
+              mode="single"
+              selected={endDate}
+              onDayClick={(e) => {
+                checkDate(e) && setEndDate(e);
+              }}
+              footer={`Chosen expiry date: ${format(endDate, "dd/MM/yyyy")}`}
+            />
+          </div>
+          <div>
             <label className="label">Property Images</label>
             <input
               type="file"
               multiple={true}
+              required
               accept=".jpg, .jpeg, .png"
               className="file-input file-input-bordered file-input-sm w-full max-w-xs"
               onChange={(e) => {
-                console.log("Setting files");
-                console.log(e.target.files);
                 setPhotos(e.target.files);
               }}
             />
           </div>
-          <button type="submit" className="btn btn-accent p-2 mt-2">
-            Create Property
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn btn-accent p-2 mt-2 disabled:cursor-not-allowed"
+          >
+            {loading ? "Creating property..." : "Create Property"}
           </button>
           <div>
             <p className="text-xs text-red-500">{info}</p>
@@ -223,8 +228,35 @@ export const CreateProperty = () => {
       </div>
       <div className="basis-1/2">
         <div className="mx-auto mr-4">
-          <h1>Property Location</h1>
-          <SelectMap lat={lat} long={long} setLat={setLat} setLong={setLong} />
+          <div>
+            <h1>Property Location</h1>
+            <SelectMap
+              lat={lat}
+              long={long}
+              setLat={setLat}
+              setLong={setLong}
+            />
+          </div>
+          <div>
+            <h1 className="pb-2">Image Preview</h1>
+            <div className="flex">
+              {photos.length > 0 ? (
+                <div className="carousel carousel-center rounded-box mx-auto">
+                  {Array.from(photos).map((photo) => (
+                    <div className="carousel-item" key={photo.name}>
+                      <img
+                        className="block w-96 h-72"
+                        src={URL.createObjectURL(photo)}
+                        alt={photo.name}
+                      />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="mx-auto my-24">No images selected</div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </section>
