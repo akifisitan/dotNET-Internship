@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 
 export const ShowcaseTable = ({ data }) => {
-  const rowLength = 6;
+  const rowLength = 5;
   const numRows = Math.ceil(data.length / rowLength);
   const navigate = useNavigate();
   const handleClick = (entry) => {

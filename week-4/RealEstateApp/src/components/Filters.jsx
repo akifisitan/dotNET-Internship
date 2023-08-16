@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { getAll } from "../services/EntityService";
 
-export const Filters = ({ setFilters }) => {
-  // const
-  const [propertyType, setPropertyType] = useState("");
-  const [propertyStatus, setPropertyStatus] = useState("");
-  const [currency, setCurrency] = useState("");
+export const Filters = ({ setCurrentPage, setFilters }) => {
+  const [typeId, setTypeId] = useState("-1");
+  const [statusId, setStatusId] = useState("-1");
+  const [currencyId, setCurrencyId] = useState("-1");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [propertyStatuses, setPropertyStatuses] = useState([]);
   const [currencies, setCurrencies] = useState([]);
@@ -29,24 +30,23 @@ export const Filters = ({ setFilters }) => {
 
   const filterData = () => {
     const filters = {};
-    let gate = false;
-    if (currency !== "") {
-      filters.currency = currency;
-      gate = true;
+    if (currencyId !== "-1") {
+      filters.currencyId = currencyId;
     }
-    if (propertyType !== "") {
-      filters.type = propertyType;
-      gate = true;
+    if (typeId !== "-1") {
+      filters.typeId = typeId;
     }
-    if (propertyStatus !== "") {
-      filters.status = propertyStatus;
-      gate = true;
+    if (statusId !== "-1") {
+      filters.statusId = statusId;
     }
-    if (gate === false) {
-      setFilters(null);
-    } else {
-      setFilters(filters);
+    if (minPrice !== "" && minPrice !== "0") {
+      filters.minPrice = minPrice;
     }
+    if (maxPrice !== "" && maxPrice !== "9999999") {
+      filters.maxPrice = maxPrice;
+    }
+    setFilters(filters);
+    setCurrentPage(1);
   };
 
   useEffect(() => {
@@ -64,15 +64,28 @@ export const Filters = ({ setFilters }) => {
         <h2 className="text-center text-lg">Filters</h2>
         <li>
           <div>
-            <label>Min</label>
-            <input type="range" min={0} max="100" className="range range-sm" />
+            <label className="label">Min</label>
+            <input
+              type="number"
+              defaultValue={0}
+              min={0}
+              max={9999999}
+              onChange={(e) => setMinPrice(e.target.value)}
+              className="input input-bordered input-sm w-full max-w-xs"
+            />
           </div>
         </li>
         <li>
           <div>
-            <label>Max</label>
-            <input type="range" min={0} max="100" className=" range range-sm" />
-            0000000
+            <label className="label">Max</label>
+            <input
+              type="number"
+              defaultValue={9999999}
+              min={0}
+              max={9999999}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="input input-bordered input-sm w-full max-w-xs"
+            />
           </div>
         </li>
         <li>
@@ -81,13 +94,12 @@ export const Filters = ({ setFilters }) => {
             <select
               className="select select-bordered select-sm w-full max-w-xs"
               onChange={(e) => {
-                console.log(`Chosen currency id: ${e.target.value}`);
-                setCurrency(e.target.value);
+                setCurrencyId(e.target.value);
               }}
             >
-              <option value="">Any</option>
+              <option value={"-1"}>Any</option>
               {currencies.map((data) => (
-                <option key={data.id} value={data.value}>
+                <option key={data.id} value={data.id}>
                   {data.value}
                 </option>
               ))}
@@ -100,13 +112,12 @@ export const Filters = ({ setFilters }) => {
             <select
               className="select select-bordered select-sm w-full max-w-xs"
               onChange={(e) => {
-                console.log(`Chosen type id: ${e.target.value}`);
-                setPropertyType(e.target.value);
+                setTypeId(e.target.value);
               }}
             >
-              <option value="">Any</option>
+              <option value={"-1"}>Any</option>
               {propertyTypes.map((data) => (
-                <option key={data.id} value={data.value}>
+                <option key={data.id} value={data.id}>
                   {data.value}
                 </option>
               ))}
@@ -119,13 +130,12 @@ export const Filters = ({ setFilters }) => {
             <select
               className="select select-bordered select-sm w-full max-w-xs"
               onChange={(e) => {
-                console.log(`Chosen status id: ${e.target.value}`);
-                setPropertyStatus(e.target.value);
+                setStatusId(e.target.value);
               }}
             >
-              <option value="">Any</option>
+              <option value={"-1"}>Any</option>
               {propertyStatuses.map((data) => (
-                <option key={data.id} value={data.value}>
+                <option key={data.id} value={data.id}>
                   {data.value}
                 </option>
               ))}

@@ -96,6 +96,15 @@ export async function getAllProperties() {
   return null;
 }
 
+export async function getPaginated(pageNumber, filters) {
+  const params = { ...filters, pageNumber: pageNumber };
+  const response = await Get("Property/getPaginated", true, params);
+  if (response) {
+    return { data: response.data, statusCode: response.status };
+  }
+  return null;
+}
+
 export async function getAnalyticsByUserId() {
   const response = await Get("Property/getAnalyticsByUserId", true);
   if (response) {

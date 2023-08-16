@@ -111,7 +111,6 @@ namespace RealEstateApp.Api.Controllers
         [Route("getAll")]
         public async Task<IActionResult> GetAll()
         {
-            int userId = Convert.ToInt32(User.FindFirst("Id")?.Value);
             var result = await _context.Properties.AsNoTracking()
                 .Where(x => x.Status != (int)EntityStatus.Deleted)
                 .Include(x => x.PropertyImages)
@@ -144,6 +143,84 @@ namespace RealEstateApp.Api.Controllers
                 };
                 responseDTO.Add(dto);
             }
+            return Ok(responseDTO);
+        }
+
+        [Authorize(Roles = UserRoles.User)]
+        [HttpGet]
+        [Route("getPageNumber")]
+        public async Task<IActionResult> GetPageNumber()
+        {
+            var query = _context.Properties.AsNoTracking()
+                .Where(x => x.Status != (int)EntityStatus.Deleted)
+                .Include(x => x.PropertyImages)
+                .Include(x => x.User)
+                .Include(x => x.Currency)
+                .Include(x => x.PropertyStatus)
+                .Include(x => x.PropertyType);
+            var result = await query.CountAsync();
+            return Ok(result);
+        }
+
+        // [Authorize(Roles = UserRoles.User)]
+        [HttpGet]
+        [Route("getPaginated")]
+        public async Task<IActionResult> GetPaginated
+            (int pageNumber, int? statusId, int? typeId, int? currencyId, int? minPrice, int? maxPrice
+            )
+        {
+            minPrice ??= 0;
+            maxPrice ??= int.MaxValue;
+            int itemsPerPage = 5;
+            var query = _context.Properties.AsNoTracking()
+                .Where(x => x.Status != (int)EntityStatus.Deleted)
+                .Where(x => x.PropertyTypeId == typeId || typeId == null)
+                .Where(x => x.PropertyStatusId == statusId || statusId == null)
+                .Where(x => x.CurrencyId == currencyId || currencyId == null)
+                .Where(x => x.Price >= minPrice && x.Price <= maxPrice)
+                .Include(x => x.PropertyImages)
+                .Include(x => x.User)
+                .Include(x => x.Currency)
+                .Include(x => x.PropertyStatus)
+                .Include(x => x.PropertyType);
+
+            var totalItems = await query.CountAsync();
+            var numberOfPages = (int)Math.Ceiling((double)totalItems / itemsPerPage);
+
+            var result = await query.Skip(itemsPerPage * (pageNumber - 1)).Take(itemsPerPage).ToListAsync();
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+            var responseData = new List<PropertyListDTO>();
+            foreach (var property in result)
+            {
+                var image = new PropertyFieldInfoDTO<PropertyImage>
+                {
+                    Value = property.PropertyImages.First().Value
+                };
+                var dto = new PropertyListDTO
+                {
+                    Id = property.Id,
+                    Thumbnail = image.Value,
+                    Status = property.PropertyStatus.Value,
+                    Type = property.PropertyType.Value,
+                    Currency = property.Currency.Value,
+                    Price = property.Price,
+                    Latitude = property.Latitude,
+                    Longitude = property.Longitude
+                };
+                responseData.Add(dto);
+            }
+            var responseDTO = new PropertyGetPaginatedResponseDTO()
+            {
+                Items = responseData,
+                NumberOfPages = numberOfPages,
+                CurrentPage = pageNumber,
+                NumberOfItems = responseData.Count,
+                ItemsPerPage = itemsPerPage
+            };
             return Ok(responseDTO);
         }
 

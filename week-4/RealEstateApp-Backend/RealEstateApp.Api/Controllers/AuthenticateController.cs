@@ -160,7 +160,7 @@ namespace RealEstateApp.Api.Controllers
         [HttpPost]
         [Authorize(Roles = UserRoles.Admin)]
         [Route("create-role")]
-        public async Task<IActionResult> CreateRole([FromBody] string roleName)
+        public async Task<IActionResult> CreateRole(string roleName)
         {
             roleName = roleName.Trim();
             if (await _roleManager.RoleExistsAsync(roleName))
