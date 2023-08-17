@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { getById } from "../../services/EntityService";
 import { DetailMap } from "../map/DetailMap";
 import { defaultLatitude, defaultLongitude } from "../../helpers/MapData";
-import { getAllProperties } from "../../services/PropertyService";
 import { Marker, Popup } from "react-leaflet";
 
 export const DetailedView = () => {

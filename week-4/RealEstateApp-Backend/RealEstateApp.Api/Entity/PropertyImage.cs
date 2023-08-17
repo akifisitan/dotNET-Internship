@@ -3,7 +3,6 @@
     public class PropertyImage : PropertyFieldBase
     {
         public int PropertyId { get; set; }
-        // [JsonIgnore] // Add this attribute to prevent circular serialization
         public Property Property { get; set; }
 
         public PropertyImage() { }

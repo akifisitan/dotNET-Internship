@@ -53,33 +53,37 @@ export const Home = () => {
 
   return (
     <div className="p-2">
-      <h1 className="text-2xl p-1">Home Page</h1>
+      <h1 className="text-2xl pl-4 mb-4">Home</h1>
       <div className="flex flex-row">
         <div className="basis-1/4">
           <Filters setCurrentPage={setCurrentPage} setFilters={setFilters} />
-          <div className="flex ">
-            <div className="join w-full">
-              <button
-                className="join-item btn w-1/5"
-                onClick={() => {
-                  if (currentPage !== 1) setCurrentPage(currentPage - 1);
-                }}
-              >
-                «
-              </button>
-              <button className="join-item btn w-3/5">
-                Page {currentPage}
-              </button>
-              <button
-                className="join-item btn w-1/5"
-                onClick={() => {
-                  if (currentPage !== maxPage) setCurrentPage(currentPage + 1);
-                }}
-              >
-                »
-              </button>
+          {loading || error ? null : (
+            <div className="flex flex-row mt-2">
+              <div className="join w-full justify-center items-center">
+                <button
+                  className="join-item btn w-1/6"
+                  onClick={() => {
+                    setCurrentPage(currentPage - 1);
+                  }}
+                  disabled={currentPage === 1}
+                >
+                  «
+                </button>
+                <button className="join-item btn w-2/5">
+                  Page {currentPage} / {maxPage}
+                </button>
+                <button
+                  className="join-item btn w-1/6"
+                  onClick={() => {
+                    setCurrentPage(currentPage + 1);
+                  }}
+                  disabled={currentPage === maxPage}
+                >
+                  »
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
         <div className="basis-4/5">
           <div>

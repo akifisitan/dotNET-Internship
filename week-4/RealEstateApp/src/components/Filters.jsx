@@ -45,8 +45,8 @@ export const Filters = ({ setCurrentPage, setFilters }) => {
     if (maxPrice !== "" && maxPrice !== "9999999") {
       filters.maxPrice = maxPrice;
     }
-    setFilters(filters);
     setCurrentPage(1);
+    setFilters(filters);
   };
 
   useEffect(() => {
@@ -60,7 +60,7 @@ export const Filters = ({ setCurrentPage, setFilters }) => {
 
   return (
     <div className="flex flex-row">
-      <ul className="menu bg-base-200 rounded-box">
+      <ul className="menu bg-base-200 rounded-box mx-auto">
         <h2 className="text-center text-lg">Filters</h2>
         <li>
           <div>

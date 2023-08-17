@@ -148,22 +148,6 @@ namespace RealEstateApp.Api.Controllers
 
         [Authorize(Roles = UserRoles.User)]
         [HttpGet]
-        [Route("getPageNumber")]
-        public async Task<IActionResult> GetPageNumber()
-        {
-            var query = _context.Properties.AsNoTracking()
-                .Where(x => x.Status != (int)EntityStatus.Deleted)
-                .Include(x => x.PropertyImages)
-                .Include(x => x.User)
-                .Include(x => x.Currency)
-                .Include(x => x.PropertyStatus)
-                .Include(x => x.PropertyType);
-            var result = await query.CountAsync();
-            return Ok(result);
-        }
-
-        // [Authorize(Roles = UserRoles.User)]
-        [HttpGet]
         [Route("getPaginated")]
         public async Task<IActionResult> GetPaginated
             (int pageNumber, int? statusId, int? typeId, int? currencyId, int? minPrice, int? maxPrice
@@ -171,7 +155,7 @@ namespace RealEstateApp.Api.Controllers
         {
             minPrice ??= 0;
             maxPrice ??= int.MaxValue;
-            int itemsPerPage = 5;
+            int itemsPerPage = 30;
             var query = _context.Properties.AsNoTracking()
                 .Where(x => x.Status != (int)EntityStatus.Deleted)
                 .Where(x => x.PropertyTypeId == typeId || typeId == null)
