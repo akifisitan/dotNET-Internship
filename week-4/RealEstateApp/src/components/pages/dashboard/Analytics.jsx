@@ -1,6 +1,6 @@
 import { Chart } from "react-google-charts";
 import { useState, useEffect } from "react";
-import { getAnalyticsByUserId } from "../services/PropertyService";
+import { getAnalyticsByUserId } from "../../../services/PropertyService";
 
 export const Analytics = () => {
   const [isLoading, setIsLoading] = useState(true);

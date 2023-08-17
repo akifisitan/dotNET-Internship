@@ -1,8 +1,8 @@
 import { useState, useEffect, useContext } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { authContext } from "../../context/authContext";
-import { login } from "../../services/AuthService";
-import { storeUserData } from "../../helpers/Auth";
+import { authContext } from "../../../context/authContext";
+import { login } from "../../../services/AuthService";
+import { storeUserData } from "../../../helpers/Auth";
 
 export const Login = () => {
   const [username, setUserName] = useState("");

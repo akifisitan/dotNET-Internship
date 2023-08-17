@@ -1,5 +1,5 @@
-import { AuthCheck } from "./auth/AuthCheck.jsx";
-import { Pages } from "./Pages.jsx";
+import { AuthCheck } from "./auth/AuthCheck";
+import { Pages } from "./pages/Pages";
 
 export const App = () => {
   console.log("App re-rendered.");

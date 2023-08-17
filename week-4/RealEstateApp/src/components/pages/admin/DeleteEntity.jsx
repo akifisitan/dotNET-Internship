@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { deleteEntity } from "../../services/EntityService";
 import { useNavigate } from "react-router-dom";
+import { deleteEntity } from "../../../services/EntityService";
 
 export const DeleteEntity = ({ entityData }) => {
   const [dataId, setDataId] = useState();

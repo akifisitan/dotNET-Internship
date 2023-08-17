@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import { getAll } from "../../services/EntityService";
+import { getAllPropertiesByUser } from "../../../../services/PropertyService";
+import { PropertyTableView } from "./PropertyTableView";
 import { useNavigate } from "react-router-dom";
 
-export const ListEntities = ({ entityData }) => {
+export const ListProperties = () => {
   const [{ isLoading, data, error }, setState] = useState({
     isLoading: false,
     data: [],
     error: null,
   });
-  const { name, path } = entityData;
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    const response = await getAll(path);
+    const response = await getAllPropertiesByUser();
     let data = [];
     let error = null;
     if (!response) {
@@ -25,10 +25,12 @@ export const ListEntities = ({ entityData }) => {
           data = response.data;
           break;
         case 401:
-          navigate("/logout");
+          navigate("/logout", { replace: true });
           break;
         case 403:
           error = "You do not have permission perform to this action.";
+          break;
+        case 404:
           break;
         default:
           error = `An unhandled situation ocurred, server response status code: ${statusCode}.`;
@@ -49,37 +51,26 @@ export const ListEntities = ({ entityData }) => {
     });
     const timeoutId = setTimeout(() => {
       fetchData();
-    }, 500);
+    }, 300);
 
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [name]);
+  }, []);
 
   return (
-    <section className="flex flex-col">
-      <h1>{name} List</h1>
-      <div className="p-2">
-        {!isLoading ? (
-          error ? (
-            <p>{error}</p>
-          ) : (
-            data.map((entity) => {
-              return (
-                <div
-                  key={entity.id}
-                  className="border-2 rounded-lg p-2 border-cyan-700 pl-2 m-2 max-w-xs"
-                >
-                  <p>Id: {entity.id}</p>
-                  <p>Value: {entity.value}</p>
-                </div>
-              );
-            })
-          )
+    <div className="flex p-2">
+      {!isLoading ? (
+        error ? (
+          <p>{error}</p>
         ) : (
+          <PropertyTableView data={data} />
+        )
+      ) : (
+        <div className="w-12 mx-auto">
           <span className="loading loading-spinner loading-lg text-accent"></span>
-        )}
-      </div>
-    </section>
+        </div>
+      )}
+    </div>
   );
 };

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { Marker, Popup } from "react-leaflet";
-import { DetailMap } from "./map/DetailMap";
-import { defaultLatitude, defaultLongitude } from "../helpers/MapData";
-import { getAllProperties } from "../services/PropertyService";
+import { DetailMap } from "../../reusable/map/DetailMap";
+import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
+import { getAllProperties } from "../../../services/PropertyService";
 
 export const PropertyMap = () => {
   const [isLoading, setIsLoading] = useState(true);

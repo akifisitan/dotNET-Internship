@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAll } from "../services/EntityService";
+import { getAll } from "../../../services/EntityService";
 
 export const Filters = ({ setCurrentPage, setFilters }) => {
   const [typeId, setTypeId] = useState("-1");

@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import { Link } from "react-router-dom";
-import { authContext } from "../context/authContext";
+import { authContext } from "../../context/authContext";
 
 export const Navbar = () => {
   const { userInfo } = useContext(authContext);

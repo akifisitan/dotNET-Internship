@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { ListProperties } from "./property/user/ListProperties";
+import { ListProperties } from "./user/ListProperties";
 import { Analytics } from "./Analytics";
 
 export const Dashboard = () => {

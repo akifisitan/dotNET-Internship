@@ -1,8 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { getById } from "../../services/EntityService";
-import { DetailMap } from "../map/DetailMap";
-import { defaultLatitude, defaultLongitude } from "../../helpers/MapData";
+import { getById } from "../../../services/EntityService";
+import { DetailMap } from "../../reusable/map/DetailMap";
+import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
 import { Marker, Popup } from "react-leaflet";
 
 export const DetailedView = () => {

@@ -1,8 +1,8 @@
 import { Filters } from "./Filters";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getPaginated } from "../services/PropertyService";
-import { ShowcaseTable } from "./property/ShowcaseTable";
+import { getPaginated } from "../../../services/PropertyService";
+import { ShowcaseTable } from "./ShowcaseTable";
 
 export const Home = () => {
   const [filters, setFilters] = useState();

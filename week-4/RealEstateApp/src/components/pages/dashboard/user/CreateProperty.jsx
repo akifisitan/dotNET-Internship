@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { getAll } from "../../../services/EntityService";
-import { createProperty } from "../../../services/PropertyService";
 import { useNavigate } from "react-router-dom";
-import { SelectMap } from "../../map/SelectMap";
-import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
+import { getAll } from "../../../../services/EntityService";
+import { createProperty } from "../../../../services/PropertyService";
+import { SelectMap } from "../../../reusable/map/SelectMap";
+import { defaultLatitude, defaultLongitude } from "../../../../helpers/MapData";
 import { format } from "date-fns";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
