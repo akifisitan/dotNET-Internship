@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getAllPropertiesByUser } from "../../../../services/PropertyService";
+import { getUserShowcaseData } from "../../../../services/PropertyService";
 import { PropertyTableView } from "./PropertyTableView";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +12,7 @@ export const ListProperties = () => {
   const navigate = useNavigate();
 
   const fetchData = async () => {
-    const response = await getAllPropertiesByUser();
+    const response = await getUserShowcaseData();
     let data = [];
     let error = null;
     if (!response) {

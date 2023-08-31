@@ -23,6 +23,7 @@ export async function createNewProperty(data) {
     for (const photo of data.photos) {
       form.append("Photos", photo);
     }
+    console.log(form);
     const response = await axios.post(`${baseURL}Property`, form, config);
     console.log("Axios response");
     console.log(response);
@@ -80,16 +81,16 @@ export async function updateProperty(data) {
   return null;
 }
 
-export async function getAllPropertiesByUser() {
-  const response = await Get("Property/getAllByUserId", true);
+export async function getUserShowcaseData() {
+  const response = await Get("Property/getUserShowcaseData", true);
   if (response) {
     return { data: response.data, statusCode: response.status };
   }
   return null;
 }
 
-export async function getAllProperties() {
-  const response = await Get("Property/getAll", true);
+export async function getAllMapData() {
+  const response = await Get("Property/getAllMapData", false);
   if (response) {
     return { data: response.data, statusCode: response.status };
   }
@@ -97,8 +98,8 @@ export async function getAllProperties() {
 }
 
 export async function getPaginated(pageNumber, filters) {
-  const params = { ...filters, pageNumber: pageNumber };
-  const response = await Get("Property/getPaginated", true, params);
+  const params = { ...filters, page: pageNumber, pageSize: 12 };
+  const response = await Get("Property/getPaginated", false, params);
   if (response) {
     return { data: response.data, statusCode: response.status };
   }

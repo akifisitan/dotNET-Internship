@@ -2,14 +2,14 @@ import { useState, useEffect } from "react";
 import { Marker, Popup } from "react-leaflet";
 import { DetailMap } from "../../reusable/map/DetailMap";
 import { defaultLatitude, defaultLongitude } from "../../../helpers/MapData";
-import { getAllProperties } from "../../../services/PropertyService";
+import { getAllMapData } from "../../../services/PropertyService";
 
 export const PropertyMap = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [properties, setProperties] = useState(null);
 
   const fetchProperties = async () => {
-    const response = await getAllProperties();
+    const response = await getAllMapData();
     if (response && response.statusCode === 200) {
       setProperties(response.data);
     }

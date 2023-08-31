@@ -29,9 +29,9 @@ export const DetailedView = () => {
       setEndDate(response.data.endDate);
       setCurrency(response.data.currency.value);
       setPrice(response.data.price);
-      setPropertyStatus(response.data.propertyStatus.value);
-      setPropertyType(response.data.propertyType.value);
-      setPhotos(response.data.propertyImages);
+      setPropertyStatus(response.data.status.value);
+      setPropertyType(response.data.type.value);
+      setPhotos(response.data.images);
       setLatitude(response.data.latitude);
       setLongitude(response.data.longitude);
     }
@@ -66,12 +66,12 @@ export const DetailedView = () => {
           </div>
           <div className="flex">
             <div className="carousel carousel-end rounded-box mx-auto">
-              {photos.map((photo) => (
-                <div className="carousel-item" key={photo.id}>
+              {photos.map((photo, index) => (
+                <div className="carousel-item" key={index}>
                   <img
                     className="block w-96 h-72"
-                    src={`data:image/jpeg;base64,${photo.value}`}
-                    alt={photo.id}
+                    src={photo}
+                    alt={propertyType}
                   />
                 </div>
               ))}

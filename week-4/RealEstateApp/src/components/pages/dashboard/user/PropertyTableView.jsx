@@ -20,7 +20,11 @@ export const PropertyTableView = ({ data }) => {
             <img
               className="block m-auto cursor-pointer w-32 h-24"
               onClick={() => handleClick(entry)}
-              src={`data:image/jpeg;base64,${entry.thumbnail}`}
+              src={
+                entry.thumbnail.startsWith("data:image")
+                  ? entry.thumbnail
+                  : `data:image/jpeg;base64,${entry.thumbnail}}`
+              }
               alt="property"
             />
             <p className="text-center">

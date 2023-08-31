@@ -102,12 +102,12 @@ export const EditProperty = () => {
       setStartDate(response.data.startDate);
       setEndDate(response.data.endDate);
       setPrice(response.data.price);
-      setPropertyStatusId(response.data.propertyStatus.id);
-      setPropertyTypeId(response.data.propertyType.id);
+      setPropertyStatusId(response.data.status.id);
+      setPropertyTypeId(response.data.type.id);
       setCurrencyId(response.data.currency.id);
       setLat(response.data.latitude);
       setLong(response.data.longitude);
-      setPhotos(response.data.propertyImages);
+      setPhotos(response.data.images);
     }
   };
 
@@ -293,12 +293,12 @@ export const EditProperty = () => {
       <div className="basis-1/3">
         <div className="mx-auto mr-4">
           <h1>Property Photos</h1>
-          {photos.map((entry) => (
+          {photos.map((photo, index) => (
             <img
-              key={entry.id}
+              key={index}
               className="mt-4 mb-4 w-96 h-48"
-              src={`data:image/jpeg;base64,${entry.value}`}
-              alt="property"
+              src={photo}
+              alt="Property"
             />
           ))}
         </div>

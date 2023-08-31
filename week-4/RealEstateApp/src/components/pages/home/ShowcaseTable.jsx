@@ -20,7 +20,7 @@ export const ShowcaseTable = ({ data }) => {
             <img
               className="block m-auto cursor-pointer w-32 h-24"
               onClick={() => handleClick(entry)}
-              src={`data:image/jpeg;base64,${entry.thumbnail}`}
+              src={entry.thumbnail}
               alt="property"
             />
             <p className="text-center">
