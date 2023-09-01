@@ -6,8 +6,11 @@ export const DetailMap = ({ lat, long, size, children }) => {
     <MapContainer
       center={[lat, long]}
       attributionControl={false}
-      zoomControl={false}
-      zoom={5}
+      zoomControl={true}
+      scrollWheelZoom={false}
+      zoom={6}
+      minZoom={5}
+      maxZoom={15}
       style={{
         height: size ? "80vh" : "350px",
         position: "relative",

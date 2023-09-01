@@ -12,7 +12,7 @@ export const DetailedView = () => {
   const [propertyStatus, setPropertyStatus] = useState(-1);
   const [currency, setCurrency] = useState(-1);
   const [price, setPrice] = useState(-1);
-  const [photos, setPhotos] = useState([]);
+  const [images, setImages] = useState([]);
   const [latitude, setLatitude] = useState(defaultLatitude);
   const [longitude, setLongitude] = useState(defaultLongitude);
   const [isLoading, setIsLoading] = useState(true);
@@ -27,11 +27,11 @@ export const DetailedView = () => {
     if (response && response.statusCode === 200) {
       setStartDate(response.data.startDate);
       setEndDate(response.data.endDate);
-      setCurrency(response.data.currency.value);
+      setCurrency(response.data.currency);
       setPrice(response.data.price);
-      setPropertyStatus(response.data.status.value);
-      setPropertyType(response.data.type.value);
-      setPhotos(response.data.images);
+      setPropertyStatus(response.data.status);
+      setPropertyType(response.data.type);
+      setImages(response.data.images);
       setLatitude(response.data.latitude);
       setLongitude(response.data.longitude);
     }
@@ -66,11 +66,11 @@ export const DetailedView = () => {
           </div>
           <div className="flex">
             <div className="carousel carousel-end rounded-box mx-auto">
-              {photos.map((photo, index) => (
-                <div className="carousel-item" key={index}>
+              {images.map((image) => (
+                <div className="carousel-item" key={image.id}>
                   <img
                     className="block w-96 h-72"
-                    src={photo}
+                    src={image.value}
                     alt={propertyType}
                   />
                 </div>

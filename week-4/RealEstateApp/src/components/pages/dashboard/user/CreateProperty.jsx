@@ -16,7 +16,7 @@ export const CreateProperty = () => {
   const [currencyId, setCurrencyId] = useState(-1);
   const [price, setPrice] = useState(-1);
   const [endDate, setEndDate] = useState(new Date());
-  const [photos, setPhotos] = useState([]);
+  const [images, setImages] = useState([]);
   const [lat, setLat] = useState(defaultLatitude);
   const [long, setLong] = useState(defaultLongitude);
   const [propertyTypes, setPropertyTypes] = useState([]);
@@ -38,13 +38,12 @@ export const CreateProperty = () => {
       return;
     }
     const data = {
-      startDate: format(new Date(), "dd/MM/yyyy"),
-      endDate: format(endDate, "dd/MM/yyyy"),
+      endDate: format(endDate, "yyyy-MM-dd"),
       propertyTypeId: propertyTypeId,
       propertyStatusId: propertyStatusId,
       currencyId: currencyId,
       price: price,
-      photos: photos,
+      images: images,
       latitude: lat.toFixed(2),
       longitude: long.toFixed(2),
     };
@@ -76,7 +75,7 @@ export const CreateProperty = () => {
       propertyStatusId === -1 ||
       currencyId === -1 ||
       price === -1 ||
-      photos.length === 0
+      images.length === 0
     ) {
       return false;
     }
@@ -210,7 +209,7 @@ export const CreateProperty = () => {
               accept=".jpg, .jpeg, .png"
               className="file-input file-input-bordered file-input-sm w-full max-w-xs"
               onChange={(e) => {
-                setPhotos(e.target.files);
+                setImages(e.target.files);
               }}
             />
           </div>
@@ -240,14 +239,14 @@ export const CreateProperty = () => {
           <div>
             <h1 className="pb-2">Image Preview</h1>
             <div className="flex">
-              {photos.length > 0 ? (
+              {images.length > 0 ? (
                 <div className="carousel carousel-center rounded-box mx-auto">
-                  {Array.from(photos).map((photo) => (
-                    <div className="carousel-item" key={photo.name}>
+                  {Array.from(images).map((image) => (
+                    <div className="carousel-item" key={image.name}>
                       <img
                         className="block w-96 h-72"
-                        src={URL.createObjectURL(photo)}
-                        alt={photo.name}
+                        src={URL.createObjectURL(image)}
+                        alt={image.name}
                       />
                     </div>
                   ))}
